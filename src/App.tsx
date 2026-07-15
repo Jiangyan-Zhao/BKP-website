@@ -207,7 +207,7 @@ const examples: Record<
     title: string;
     description: string;
     tag: string;
-    image: string;
+    figure: string;
     alt: string;
     source: string;
     sourceUrl: string;
@@ -217,7 +217,7 @@ const examples: Record<
     title: "Nonlinear BKP posterior",
     description: "Example 2 shows the fitted posterior mean, pointwise 95% credible interval, observed proportions, and the true nonlinear probability function.",
     tag: "BKP · Example 2",
-    image: "/results/ex2.png",
+    figure: "/results/ex2.pdf",
     alt: "BKP posterior mean and 95 percent credible interval for the nonlinear binomial example",
     source: "s4_ex2_bkp_1d_nonlinear.R",
     sourceUrl: "https://github.com/Jiangyan-Zhao/BKP-paper/blob/master/code/s4_ex2_bkp_1d_nonlinear.R",
@@ -226,7 +226,7 @@ const examples: Record<
     title: "Iris multiclass classification",
     description: "Example 7 visualizes DKP classification regions and the maximum predicted class probability, revealing where class assignments are less decisive.",
     tag: "DKP · Example 7",
-    image: "/results/ex7.png",
+    figure: "/results/ex7.pdf",
     alt: "DKP predicted classes and maximum predicted probability for the Iris data",
     source: "s4_ex7_dkp_iris_classification.R",
     sourceUrl: "https://github.com/Jiangyan-Zhao/BKP-paper/blob/master/code/s4_ex7_dkp_iris_classification.R",
@@ -235,7 +235,7 @@ const examples: Record<
     title: "Mourning Warbler distribution",
     description: "The real-data application maps training presences, training absences, and spatially withheld test observations across North America.",
     tag: "BKP · Real data",
-    image: "/results/warbler-distribution.png",
+    figure: "/results/mourning-warbler-distribution.pdf",
     alt: "Map of Mourning Warbler training presences, training absences, and withheld test locations",
     source: "s5_app2_mourning_warbler_sdm.R",
     sourceUrl: "https://github.com/Jiangyan-Zhao/BKP-paper/blob/master/code/s5_app2_mourning_warbler_sdm.R",
@@ -244,6 +244,7 @@ const examples: Record<
 
 function ExampleExplorer() {
   const [selected, setSelected] = useState<ExampleKey>("curve");
+  const figureUrl = `${import.meta.env.BASE_URL}${examples[selected].figure.replace(/^\//, "")}`;
   return (
     <div className="example-explorer">
       <div className="example-tabs" role="tablist" aria-label="Visualization examples">
@@ -255,16 +256,24 @@ function ExampleExplorer() {
       </div>
       <article className="example-display">
         <div className="example-visual">
-          <img
+          <object
+            key={selected}
             className={`paper-figure ${selected}`}
-            src={`${import.meta.env.BASE_URL}${examples[selected].image.replace(/^\//, "")}`}
-            alt={examples[selected].alt}
-          />
+            data={`${figureUrl}#view=FitH&toolbar=0&navpanes=0`}
+            type="application/pdf"
+            aria-label={examples[selected].alt}
+          >
+            <a href={figureUrl} target="_blank" rel="noreferrer">Open the original PDF figure ↗</a>
+          </object>
         </div>
         <div className="example-caption">
           <span>{examples[selected].tag}</span>
           <h3>{examples[selected].title}</h3>
           <p>{examples[selected].description}</p>
+          <a href={figureUrl} target="_blank" rel="noreferrer">
+            <b>Open original PDF ↗</b>
+            <small>Vector figure from BKP-paper</small>
+          </a>
           <a href={examples[selected].sourceUrl} target="_blank" rel="noreferrer">
             <b>Reproduce this figure ↗</b>
             <small>{examples[selected].source}</small>

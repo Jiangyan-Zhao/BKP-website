@@ -489,11 +489,12 @@ a:focus-visible { outline: 3px solid var(--lime); outline-offset: 3px; }
 .paper-figure {
   display: block;
   width: 100%;
-  max-height: 520px;
-  object-fit: contain;
+  height: 520px;
+  border: 0;
   background: white;
 }
-.paper-figure.curve { width: auto; max-width: 100%; }
+.paper-figure.curve { width: 100%; }
+.paper-figure > a { color: var(--blue); text-decoration: underline; }
 .example-caption {
   display: flex;
   flex-direction: column;
@@ -508,7 +509,7 @@ a:focus-visible { outline: 3px solid var(--lime); outline-offset: 3px; }
 .example-caption > a {
   display: grid;
   gap: 6px;
-  margin-top: 34px;
+  margin-top: 22px;
   color: var(--blue);
   font-family: var(--font-geist-mono), monospace;
   font-size: 0.66rem;
@@ -518,6 +519,7 @@ a:focus-visible { outline: 3px solid var(--lime); outline-offset: 3px; }
 .example-caption > a b { font-size: 0.72rem; }
 .example-caption > a small { color: #6b7280; overflow-wrap: anywhere; }
 .example-caption > a:hover { text-decoration: underline; }
+.example-caption > a + a { margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(16, 19, 26, 0.14); }
 .example-grid { stroke: #d8d9dc; stroke-width: 1; stroke-dasharray: 4 6; }
 .example-posterior { fill: none; stroke: var(--blue); stroke-width: 4; stroke-linecap: round; }
 .example-truth { fill: none; stroke: var(--coral); stroke-width: 2; stroke-dasharray: 7 6; }
@@ -704,6 +706,7 @@ footer a:hover { color: var(--blue); }
   .example-explorer { margin-top: 54px; }
   .example-display { min-height: auto; }
   .example-visual { padding: 18px 8px; }
+  .paper-figure { height: 420px; }
   .example-caption { padding: 26px; }
   .terminal-bar { grid-template-columns: 1fr auto; }
   .terminal-bar > span { display: none; }
