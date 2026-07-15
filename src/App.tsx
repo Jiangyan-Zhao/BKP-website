@@ -718,9 +718,9 @@ export default function Home() {
         <a className="wordmark" href="#overview" aria-label="BKP home">BKP</a>
         <nav aria-label="Primary navigation">
           <a className="active" href="#overview">Overview</a>
+          <a href="#install">Install</a>
           <a href="#method">Method</a>
           <a href="#examples">Examples</a>
-          <a href="#install">Install</a>
         </nav>
         <div className="header-links">
           <a href="https://github.com/Jiangyan-Zhao/BKP" target="_blank" rel="noreferrer">
