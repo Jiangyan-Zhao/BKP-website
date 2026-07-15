@@ -238,13 +238,20 @@ a { color: inherit; text-decoration: none; }
   position: absolute;
   top: -34px;
   left: -142px;
-  width: 205px;
+  width: 252px;
   color: rgba(23, 70, 209, 0.66);
-  font-family: "Segoe Print", "Comic Sans MS", cursive;
-  font-size: 0.72rem;
-  line-height: 1.7;
+  font-size: 0.68rem;
   transform: rotate(-2deg);
 }
+.formula-note b {
+  display: block;
+  margin-bottom: 5px;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.64rem;
+  letter-spacing: 0.04em;
+}
+.formula-note .katex-display { margin: 0; text-align: left; }
+.formula-note small { display: block; margin-top: 3px; font-size: 0.68rem; }
 
 .chart-shell {
   position: relative;
@@ -549,61 +556,86 @@ a:focus-visible { outline: 3px solid var(--lime); outline-offset: 3px; }
 .twin-showcase {
   margin-top: 80px;
   overflow: hidden;
-  border: 1.5px solid var(--ink);
-  border-radius: 18px;
-  background: var(--card);
-  box-shadow: 9px 9px 0 var(--blue);
+  border: 1px solid #aeb1b8;
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: 7px 7px 0 rgba(31, 76, 211, 0.92);
 }
 .twin-heading {
   display: grid;
   grid-template-columns: minmax(0, 1.3fr) minmax(280px, 0.7fr);
   gap: 48px;
   align-items: end;
-  padding: 34px 38px 30px;
-  border-bottom: 1px solid var(--ink);
+  padding: 40px 44px 34px;
+  border-bottom: 1px solid #c7c9ce;
 }
 .twin-heading h3 { margin: 0; font-size: clamp(2.2rem, 4vw, 4.6rem); line-height: 0.96; letter-spacing: -0.06em; }
 .twin-heading > p { margin: 0; color: var(--muted); line-height: 1.6; }
-.twin-layout { display: grid; grid-template-columns: minmax(0, 1.42fr) minmax(330px, 0.72fr); }
-.twin-interactive { min-width: 0; padding: 30px 36px 28px; }
-.twin-metrics { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid rgba(16, 19, 26, 0.22); border-radius: 9px; }
-.twin-metrics span { display: grid; gap: 2px; padding: 12px 14px; border-right: 1px solid rgba(16, 19, 26, 0.18); color: var(--muted); font-family: var(--font-geist-mono), monospace; font-size: 0.66rem; }
-.twin-metrics span:last-child { border-right: 0; }
-.twin-metrics b { color: var(--ink); font-size: 1.05rem; }
-.twin-metrics .global b { color: var(--blue); }
-.twin-metrics .local b { color: #e84d3d; }
-.twin-rug { margin-top: 18px; overflow: hidden; border: 1px solid rgba(16, 19, 26, 0.22); border-radius: 11px; background: #fbfaf5; }
-.twin-rug svg { display: block; width: 100%; height: auto; }
-.twin-support { fill: rgba(180, 239, 28, 0.19); }
-.twin-input { stroke: #aeb3bc; stroke-width: 1; opacity: 0.52; }
-.twin-global-dot { fill: var(--card); stroke: var(--blue); stroke-width: 2.7; }
-.twin-local-dot { fill: var(--coral); stroke: white; stroke-width: 1.1; }
-.twin-query-line { stroke: var(--ink); stroke-width: 1.7; stroke-dasharray: 5 5; }
-.twin-query-dot { fill: var(--lime); stroke: var(--ink); stroke-width: 2; }
-.twin-axis-line { stroke: var(--ink); stroke-width: 1.3; }
-.twin-row-label,
-.twin-axis-text,
-.twin-query-text { fill: var(--muted); font-family: var(--font-geist-mono), monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; }
-.twin-row-label.global { fill: var(--blue); }
-.twin-row-label.local { fill: #c93c31; }
-.twin-query-text { fill: var(--ink); }
-.twin-slider { display: grid; grid-template-columns: auto 1fr 54px; gap: 14px; align-items: center; margin-top: 18px; font-family: var(--font-geist-mono), monospace; font-size: 0.72rem; font-weight: 700; }
+.twin-figure {
+  margin: 0;
+  padding: 32px 44px 18px;
+  background: #fff;
+}
+.twin-figure svg { display: block; width: 100%; height: auto; }
+.twin-figure figcaption {
+  margin: 12px 8px 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.55;
+}
+.twin-figure figcaption b { color: #142d88; }
+.twin-plot-background { fill: #fff; stroke: #202126; stroke-width: 1.25; }
+.twin-plot-grid { stroke: #e1e2e5; stroke-width: 1; }
+.twin-plot-tick,
+.twin-plot-axis-title,
+.twin-test-label,
+.twin-plot-legend text { fill: #17191f; font-family: Arial, Helvetica, sans-serif; }
+.twin-plot-tick { font-size: 13px; }
+.twin-plot-axis-title { font-size: 17px; font-weight: 650; }
+.twin-true-curve { fill: none; stroke: #111317; stroke-width: 1.45; }
+.twin-training-point { fill: #111317; opacity: 0.78; }
+.twin-global-point { fill: #fff; stroke: #09a6e9; stroke-width: 2.7; }
+.twin-local-point { fill: #fff; stroke: #00bf83; stroke-width: 2.25; }
+.twin-query-guide { stroke: #ff6b5f; stroke-width: 1; stroke-dasharray: 4 5; opacity: 0.56; }
+.twin-test-point { fill: none; stroke: #ff6b5f; stroke-width: 1.8; }
+.twin-test-label { fill: #ff6b5f; font-size: 13px; font-style: italic; }
+.twin-plot-legend rect { fill: rgba(255, 255, 255, 0.95); stroke: #d8dade; stroke-width: 0.8; }
+.twin-plot-legend text { font-size: 14px; }
+.twin-plot-legend .legend-point { opacity: 1; }
+.twin-slider {
+  display: grid;
+  grid-template-columns: auto 1fr 58px;
+  gap: 16px;
+  align-items: center;
+  margin: 0 44px 34px;
+  padding: 14px 16px;
+  border: 1px solid #cfd1d6;
+  background: #f7f8fa;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
 .twin-slider input { width: 100%; accent-color: var(--blue); cursor: pointer; }
 .twin-slider output { padding: 6px 7px; border: 1px solid var(--ink); border-radius: 5px; color: var(--blue); text-align: center; }
-.twin-update { display: grid; grid-template-columns: minmax(115px, 1fr) auto minmax(125px, 1fr) auto minmax(120px, 1fr) auto minmax(125px, 1fr); gap: 8px; align-items: stretch; margin-top: 22px; }
-.twin-update span,
-.twin-update strong { display: grid; align-content: center; min-height: 58px; padding: 10px 11px; border: 1px solid var(--ink); border-radius: 7px; font-family: var(--font-geist-mono), monospace; font-size: 0.67rem; line-height: 1.4; }
-.twin-update span { background: var(--blue-soft); }
-.twin-update span:nth-of-type(2) { background: rgba(255, 94, 78, 0.1); }
-.twin-update span small { display: block; color: var(--muted); font-size: 0.58rem; }
-.twin-update strong { background: var(--ink); color: var(--card); }
-.twin-update i { align-self: center; color: var(--blue); font-style: normal; font-weight: 800; }
-.twin-note { margin: 16px 0 0; color: var(--muted); font-size: 0.68rem; line-height: 1.55; }
-.twin-paper { display: flex; min-width: 0; flex-direction: column; padding: 24px; border-left: 1px solid var(--ink); background: #f4f1e7; }
+.twin-lower { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(330px, 0.72fr); border-top: 1px solid #c7c9ce; }
+.twin-math-panel { min-width: 0; padding: 36px 42px 34px; background: #f6f8fc; }
+.math-formula { display: inline-block; }
+.math-formula.display { display: block; max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+.math-formula .katex-display { margin: 0.72rem 0; text-align: left; }
+.twin-math-panel > .math-formula.display { color: #152f91; font-size: 0.96rem; }
+.twin-math-stages { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 22px; }
+.twin-math-stages > div { min-width: 0; padding: 18px 16px; border: 1px solid #bac0cf; background: #fff; }
+.twin-math-stages > div:last-child { border-color: rgba(0, 168, 115, 0.55); }
+.twin-math-stages span { color: var(--blue); font-family: var(--font-geist-mono), monospace; font-size: 0.65rem; font-weight: 760; letter-spacing: 0.06em; text-transform: uppercase; }
+.twin-math-stages > div:last-child span { color: #00885f; }
+.twin-math-stages .katex { font-size: 0.84em; }
+.twin-parameters { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0 0; }
+.twin-parameters span { padding: 7px 9px; border: 1px solid #c6cad3; background: #fff; color: var(--muted); font-family: var(--font-geist-mono), monospace; font-size: 0.65rem; }
+.twin-paper { display: flex; min-width: 0; flex-direction: column; padding: 28px; border-left: 1px solid #c7c9ce; background: #f4f1e7; }
 .twin-paper-label { display: grid; gap: 4px; margin-bottom: 14px; }
 .twin-paper-label span { color: var(--blue); font-family: var(--font-geist-mono), monospace; font-size: 0.64rem; font-weight: 750; letter-spacing: 0.08em; text-transform: uppercase; }
 .twin-paper-label b { font-size: 1rem; }
-.twin-paper-figure { display: block; width: 100%; height: 355px; border: 1px solid rgba(16, 19, 26, 0.18); background: white; }
+.twin-paper-figure { display: block; width: 100%; height: 380px; border: 1px solid rgba(16, 19, 26, 0.18); background: white; }
 .twin-paper-figure a { color: var(--blue); }
 .twin-paper-links { display: grid; gap: 9px; margin-top: 15px; }
 .twin-paper-links a { color: var(--blue); font-family: var(--font-geist-mono), monospace; font-size: 0.68rem; font-weight: 700; }
@@ -799,7 +831,7 @@ footer a:hover { color: var(--blue); }
   .model-grid article:nth-child(2) { border-right: 0; }
   .model-grid article:nth-child(-n + 2) { border-bottom: 1px solid var(--ink); }
   .twin-heading { grid-template-columns: 1fr; gap: 16px; }
-  .twin-layout { grid-template-columns: 1fr; }
+  .twin-lower { grid-template-columns: 1fr; }
   .twin-paper { border-top: 1px solid var(--ink); border-left: 0; }
   .twin-paper-figure { height: 480px; }
   .example-explorer { grid-template-columns: 1fr; }
@@ -831,10 +863,10 @@ footer a:hover { color: var(--blue); }
   .strip-heading { padding-left: 108px; }
   .section-intro { grid-template-columns: 1fr; gap: 18px; }
   .section-intro > p:last-child { grid-column: 1; }
-  .twin-interactive { padding: 26px 20px 24px; }
-  .twin-update { grid-template-columns: 1fr auto 1fr; }
-  .twin-update i:nth-of-type(2) { display: none; }
-  .twin-update span:nth-of-type(2) { grid-column: 1; }
+  .twin-figure { padding: 22px 18px 14px; }
+  .twin-slider { margin: 0 18px 26px; }
+  .twin-math-panel { padding: 30px 22px 28px; }
+  .twin-math-stages { grid-template-columns: 1fr; }
   .example-display { grid-template-columns: 1fr; }
   .example-caption { border-top: 1px solid var(--ink); border-left: 0; }
   .example-tabs { grid-template-columns: 1fr; }
@@ -871,16 +903,15 @@ footer a:hover { color: var(--blue); }
   .model-grid article { min-height: 220px; border-right: 0; border-bottom: 1px solid var(--ink); }
   .model-grid article:nth-child(3) { border-bottom: 1px solid var(--ink); }
   .model-grid article:last-child { border-bottom: 0; }
-  .twin-showcase { margin-top: 54px; box-shadow: 6px 6px 0 var(--blue); }
+  .twin-showcase { margin-top: 54px; box-shadow: 5px 5px 0 var(--blue); }
   .twin-heading { padding: 26px 20px 22px; }
-  .twin-metrics { grid-template-columns: repeat(2, 1fr); }
-  .twin-metrics span:nth-child(2) { border-right: 0; }
-  .twin-metrics span:nth-child(-n + 2) { border-bottom: 1px solid rgba(16, 19, 26, 0.18); }
+  .twin-figure { padding: 14px 7px 12px; }
+  .twin-figure figcaption { margin-inline: 8px; }
   .twin-slider { grid-template-columns: 1fr 54px; }
   .twin-slider span { grid-column: 1 / -1; }
-  .twin-update { grid-template-columns: 1fr; }
-  .twin-update i { justify-self: center; transform: rotate(90deg); }
-  .twin-update i:nth-of-type(2) { display: block; transform: none; }
+  .twin-slider { margin: 0 12px 22px; }
+  .twin-math-panel { padding: 25px 16px; }
+  .twin-parameters { display: grid; }
   .twin-paper { padding: 18px; }
   .twin-paper-figure { height: 360px; }
   .example-explorer { margin-top: 54px; }

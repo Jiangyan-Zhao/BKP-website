@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import katex from "katex";
 
 type Example2Observation = {
   x: number;
@@ -49,6 +50,20 @@ const example2Fit = {
 };
 
 const chart = { left: 62, top: 50, width: 648, height: 258, weightTop: 348, weightHeight: 34 };
+
+function MathFormula({ children, display = false, label }: { children: string; display?: boolean; label?: string }) {
+  const html = useMemo(
+    () => katex.renderToString(children, { displayMode: display, throwOnError: false, strict: "ignore" }),
+    [children, display],
+  );
+  return (
+    <span
+      className={display ? "math-formula display" : "math-formula"}
+      aria-label={label}
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
+  );
+}
 
 function logGamma(z: number): number {
   const coefficients = [
@@ -380,14 +395,46 @@ const twinBkpGlobalIndices = [
   259, 274, 318, 337, 370, 381, 388, 395, 450, 478, 495,
 ] as const;
 
-const twinBkpInputs = Array.from({ length: 500 }, (_, index) => -2 + ((index + 0.5) * 4) / 500);
+type TwinBkpObservation = {
+  x: number;
+  trials: number;
+  successes: number;
+  proportion: number;
+};
+
+function createSeededRandom(seed: number) {
+  let state = seed;
+  return () => {
+    state += 0x6D2B79F5;
+    let value = state;
+    value = Math.imul(value ^ (value >>> 15), value | 1);
+    value ^= value + Math.imul(value ^ (value >>> 7), value | 61);
+    return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function makeTwinBkpObservations(): TwinBkpObservation[] {
+  const random = createSeededRandom(123);
+  return Array.from({ length: 500 }, (_, index) => {
+    // Example 8 uses a one-dimensional LHS over [-2, 2].
+    const x = -2 + ((index + random()) * 4) / 500;
+    const trials = 1 + Math.floor(random() * 100);
+    const probability = trueExample2(x);
+    let successes = 0;
+    for (let trial = 0; trial < trials; trial += 1) successes += random() < probability ? 1 : 0;
+    return { x, trials, successes, proportion: successes / trials };
+  });
+}
+
+const twinBkpObservations = makeTwinBkpObservations();
+const twinChart = { left: 84, top: 50, width: 824, height: 414 };
 
 function TwinBkpExplorer() {
   const [query, setQuery] = useState(0.15);
   const globalSet = useMemo(() => new Set<number>(twinBkpGlobalIndices), []);
   const localIndices = useMemo(
-    () => twinBkpInputs
-      .map((x, index) => ({ x, index, distance: Math.abs(x - query) }))
+    () => twinBkpObservations
+      .map((observation, index) => ({ x: observation.x, index, distance: Math.abs(observation.x - query) }))
       .filter(({ index }) => !globalSet.has(index))
       .sort((left, right) => left.distance - right.distance)
       .slice(0, 25)
@@ -396,99 +443,124 @@ function TwinBkpExplorer() {
   );
   const localSet = useMemo(() => new Set(localIndices), [localIndices]);
   const paperUrl = `${import.meta.env.BASE_URL}results/ex8.pdf`;
-  const xPosition = (x: number) => 62 + ((x + 2) / 4) * 696;
-  const supportLeft = xPosition(Math.max(-2, query - 0.218));
-  const supportRight = xPosition(Math.min(2, query + 0.218));
+  const xPosition = (x: number) => twinChart.left + ((x + 2) / 4) * twinChart.width;
+  const yPosition = (probability: number) => twinChart.top + (1 - probability) * twinChart.height;
+  const truthPath = useMemo(
+    () => Array.from({ length: 321 }, (_, index) => {
+      const x = -2 + (index * 4) / 320;
+      return `${index === 0 ? "M" : "L"}${xPosition(x).toFixed(2)},${yPosition(trueExample2(x)).toFixed(2)}`;
+    }).join(" "),
+    [],
+  );
 
   return (
     <article className="twin-showcase" aria-labelledby="twin-title">
       <header className="twin-heading">
         <div>
           <p className="section-kicker">Paper · Example 8</p>
-          <h3 id="twin-title">See TwinBKP split the work.</h3>
+          <h3 id="twin-title">How TwinBKP chooses global and local points.</h3>
         </div>
         <p>
-          The global subset stays fixed; the local neighbourhood follows the query.
-          Together they form the 47-point update used for prediction.
+          Inspired by the TwinGP illustration: blue circles are shared global points,
+          green diamonds are the query-specific local neighbours.
         </p>
       </header>
 
-      <div className="twin-layout">
-        <div className="twin-interactive">
-          <div className="twin-metrics" aria-label="Paper settings">
-            <span><b>500</b> observations</span>
-            <span className="global"><b>22</b> global</span>
-            <span className="local"><b>25</b> local</span>
-            <span><b>47</b> in G ∪ L(x₀)</span>
-          </div>
+      <figure className="twin-figure">
+        <svg viewBox="0 0 1000 560" role="img" aria-label={`TwinBKP global and local training points for query x zero equals ${query.toFixed(2)}`}>
+          <rect className="twin-plot-background" x={twinChart.left} y={twinChart.top} width={twinChart.width} height={twinChart.height} />
+          {[0, 0.25, 0.5, 0.75, 1].map((tick) => (
+            <g key={`y-${tick}`}>
+              <line className="twin-plot-grid" x1={twinChart.left} x2={twinChart.left + twinChart.width} y1={yPosition(tick)} y2={yPosition(tick)} />
+              <text className="twin-plot-tick" x={twinChart.left - 16} y={yPosition(tick) + 4} textAnchor="end">{tick.toFixed(2)}</text>
+            </g>
+          ))}
+          {[-2, -1, 0, 1, 2].map((tick) => (
+            <g key={`x-${tick}`}>
+              <line className="twin-plot-grid" x1={xPosition(tick)} x2={xPosition(tick)} y1={twinChart.top} y2={twinChart.top + twinChart.height} />
+              <text className="twin-plot-tick" x={xPosition(tick)} y={twinChart.top + twinChart.height + 26} textAnchor="middle">{tick}</text>
+            </g>
+          ))}
 
-          <div className="twin-rug">
-            <svg viewBox="0 0 820 245" role="img" aria-label={`TwinBKP global and local subsets at x zero equals ${query.toFixed(2)}`}>
-              <rect className="twin-support" x={supportLeft} y="36" width={Math.max(0, supportRight - supportLeft)} height="163" rx="9" />
-              <text className="twin-row-label global" x="62" y="24">GLOBAL G · SHARED</text>
-              <text className="twin-row-label local" x="62" y="137">LOCAL L(x₀) · QUERY-SPECIFIC</text>
-
-              {twinBkpInputs.map((x, index) => (
-                <line
-                  key={`input-${index}`}
-                  className="twin-input"
-                  x1={xPosition(x)}
-                  x2={xPosition(x)}
-                  y1={86 + (index % 4) * 3}
-                  y2={96 + (index % 4) * 3}
-                />
-              ))}
-
-              {twinBkpGlobalIndices.map((index) => (
-                <circle key={`global-${index}`} className="twin-global-dot" cx={xPosition(twinBkpInputs[index])} cy="66" r="6" />
-              ))}
-
-              {twinBkpInputs.map((x, index) => localSet.has(index) && (
-                <circle key={`local-${index}`} className="twin-local-dot" cx={xPosition(x)} cy={163 + (index % 3) * 7} r="4.2" />
-              ))}
-
-              <line className="twin-query-line" x1={xPosition(query)} x2={xPosition(query)} y1="32" y2="202" />
-              <circle className="twin-query-dot" cx={xPosition(query)} cy="202" r="6.5" />
-              <line className="twin-axis-line" x1="62" x2="758" y1="202" y2="202" />
-              <text className="twin-axis-text" x="62" y="228" textAnchor="middle">−2</text>
-              <text className="twin-axis-text" x="410" y="228" textAnchor="middle">0</text>
-              <text className="twin-axis-text" x="758" y="228" textAnchor="middle">2</text>
-              <text className="twin-query-text" x={Math.min(730, Math.max(90, xPosition(query)))} y="48" textAnchor="middle">x₀</text>
-            </svg>
-          </div>
-
-          <label className="twin-slider">
-            <span>Move query x₀</span>
-            <input
-              type="range"
-              min="-2"
-              max="2"
-              step="0.01"
-              value={query}
-              onChange={(event) => setQuery(Number(event.target.value))}
+          <path className="twin-true-curve" d={truthPath} />
+          {twinBkpObservations.map((observation, index) => (
+            <circle
+              key={`training-${index}`}
+              className="twin-training-point"
+              cx={xPosition(observation.x)}
+              cy={yPosition(observation.proportion)}
+              r="1.55"
             />
-            <output>{query.toFixed(2)}</output>
-          </label>
+          ))}
 
-          <div className="twin-update" aria-label="TwinBKP two-stage posterior update">
-            <span><small>Global Gaussian</small>G · θ<sub>g</sub> = 0.05</span>
-            <i>→</i>
-            <strong>Beta(α<sub>G</sub>, β<sub>G</sub>)</strong>
-            <i>+</i>
-            <span><small>Local Wendland</small>L(x₀) · θ<sub>l</sub> = 0.0545</span>
-            <i>→</i>
-            <strong>Beta(α<sub>T</sub>, β<sub>T</sub>)</strong>
+          <line className="twin-query-guide" x1={xPosition(query)} x2={xPosition(query)} y1={twinChart.top} y2={twinChart.top + twinChart.height} />
+          {twinBkpGlobalIndices.map((index) => {
+            const observation = twinBkpObservations[index];
+            return <circle key={`global-${index}`} className="twin-global-point" cx={xPosition(observation.x)} cy={yPosition(observation.proportion)} r="6.8" />;
+          })}
+          {twinBkpObservations.map((observation, index) => {
+            if (!localSet.has(index)) return null;
+            const x = xPosition(observation.x);
+            const y = yPosition(observation.proportion);
+            return <polygon key={`local-${index}`} className="twin-local-point" points={`${x},${y - 6.5} ${x + 6.5},${y} ${x},${y + 6.5} ${x - 6.5},${y}`} />;
+          })}
+
+          <path className="twin-test-point" d={`M${xPosition(query) - 6},493 L${xPosition(query) + 6},505 M${xPosition(query) + 6},493 L${xPosition(query) - 6},505`} />
+          <text className="twin-test-label" x={xPosition(query)} y="526" textAnchor="middle">x₀</text>
+          <text className="twin-plot-axis-title" x="496" y="548" textAnchor="middle">x</text>
+          <text className="twin-plot-axis-title" x="28" y="258" textAnchor="middle" transform="rotate(-90 28 258)">yᵢ / mᵢ</text>
+
+          <g className="twin-plot-legend" transform="translate(104 74)">
+            <rect x="-15" y="-24" width="190" height="139" rx="7" />
+            <circle className="twin-training-point legend-point" cx="0" cy="0" r="3" /><text x="20" y="5">Training data</text>
+            <path className="twin-test-point" d="M-4,19 L4,27 M4,19 L-4,27" /><text x="20" y="27">Testing location</text>
+            <line className="twin-true-curve" x1="-6" x2="7" y1="47" y2="47" /><text x="20" y="52">True function</text>
+            <circle className="twin-global-point" cx="0" cy="72" r="6" /><text x="20" y="77">Global point · 22</text>
+            <polygon className="twin-local-point" points="0,90 6,96 0,102 -6,96" /><text x="20" y="101">Local point · 25</text>
+          </g>
+        </svg>
+        <figcaption><b>Interactive Example 8.</b> The black points follow the paper&apos;s nonlinear binomial design; global points stay fixed while local points follow the testing location.</figcaption>
+      </figure>
+
+      <label className="twin-slider">
+        <span>Move testing location <MathFormula>{"x_0"}</MathFormula></span>
+        <input
+          type="range"
+          min="-2"
+          max="2"
+          step="0.01"
+          value={query}
+          onChange={(event) => setQuery(Number(event.target.value))}
+        />
+        <output>{query.toFixed(2)}</output>
+      </label>
+
+      <div className="twin-lower">
+        <section className="twin-math-panel" aria-labelledby="twin-math-title">
+          <p className="section-kicker" id="twin-math-title">Local–global posterior</p>
+          <MathFormula display label="Prediction subset is the union of global and local subsets">
+            {"\\mathcal I(x_0)=\\mathcal G\\cup\\mathcal L(x_0),\\qquad |\\mathcal G|=22,\\quad|\\mathcal L(x_0)|=25"}
+          </MathFormula>
+          <MathFormula display label="TwinBKP posterior is a beta distribution">
+            {"\\pi(x_0)\\mid\\mathcal D_n\\sim\\operatorname{Beta}\\!\\left(\\alpha_T(x_0),\\beta_T(x_0)\\right)"}
+          </MathFormula>
+          <div className="twin-math-stages">
+            <div>
+              <span>01 · Global Gaussian</span>
+              <MathFormula display>{"\\begin{aligned}\\alpha_G&=\\alpha_0+\\sum_{i\\in\\mathcal G} k_g(x_0,x_i)y_i\\\\\\beta_G&=\\beta_0+\\sum_{i\\in\\mathcal G} k_g(x_0,x_i)(m_i-y_i)\\end{aligned}"}</MathFormula>
+            </div>
+            <div>
+              <span>02 · Local Wendland</span>
+              <MathFormula display>{"\\begin{aligned}\\alpha_T&=\\alpha_G+\\sum_{i\\in\\mathcal L(x_0)} k_\\ell(x_0,x_i)y_i\\\\\\beta_T&=\\beta_G+\\sum_{i\\in\\mathcal L(x_0)} k_\\ell(x_0,x_i)(m_i-y_i)\\end{aligned}"}</MathFormula>
+            </div>
           </div>
-          <p className="twin-note">
-            The rug is a paper-scale subset schematic. Counts, kernels, bandwidths, and domain match Example 8;
-            the fitted posterior at right is the original vector figure.
-          </p>
-        </div>
+          <p className="twin-parameters"><span>Gaussian <MathFormula>{"\\theta_g=0.05"}</MathFormula></span><span>Wendland <MathFormula>{"\\theta_\\ell=0.0545"}</MathFormula></span><span>5 twinning runs</span></p>
+        </section>
 
         <aside className="twin-paper">
           <div className="twin-paper-label">
-            <span>Original result</span>
-            <b>Nonlinear TwinBKP fit</b>
+            <span>Original vector result</span>
+            <b>Example 8 · TwinBKP fit</b>
           </div>
           <object
             className="twin-paper-figure"
@@ -671,9 +743,11 @@ export default function Home() {
         </div>
 
         <div className="hero-visual">
-          <span className="formula-note" aria-hidden="true">
-            Paper · Example 2<br />π₂(x) = ½[1 + e⁻ˣ² cos(10 tanh(x/2))]<br />x ∈ [−2, 2] · n = 30
-          </span>
+          <div className="formula-note" aria-hidden="true">
+            <b>Paper · Example 2</b>
+            <MathFormula display>{"\\pi_2(x)=\\tfrac12\\!\\left[1+e^{-x^2}\\cos\\!\\left(10\\tanh(x/2)\\right)\\right]"}</MathFormula>
+            <small><MathFormula>{"x\\in[-2,2],\\qquad n=30"}</MathFormula></small>
+          </div>
           <PosteriorChart />
         </div>
       </section>
