@@ -21,3 +21,5 @@ npm run preview
 The GitHub Actions workflow deploys `dist/` to GitHub Pages after every push to `main`.
 
 Live site: <https://jiangyan-zhao.github.io/BKP-website/>
+
+[![Deploy to GitHub Pages](https://github.com/Jiangyan-Zhao/BKP-website/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/Jiangyan-Zhao/BKP-website/actions/workflows/deploy-pages.yml)
