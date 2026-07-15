@@ -256,13 +256,14 @@ a { color: inherit; text-decoration: none; }
 .chart-topline { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
 .mode-switch { display: inline-flex; border: 1px solid #a9adb5; border-radius: 7px; overflow: hidden; }
 .mode-switch button {
-  min-width: 104px;
+  min-width: 132px;
   padding: 12px 15px;
   border: 0;
   border-right: 1px solid #a9adb5;
   background: transparent;
   color: var(--ink);
   cursor: pointer;
+  font-size: 0.78rem;
 }
 .mode-switch button:last-child { border-right: 0; }
 .mode-switch button.active { background: var(--blue); color: white; font-weight: 680; }
@@ -270,11 +271,12 @@ a { color: inherit; text-decoration: none; }
 .query-control input:focus-visible,
 a:focus-visible { outline: 3px solid var(--lime); outline-offset: 3px; }
 
-.legend { display: flex; gap: 16px; color: var(--muted); font-size: 0.78rem; }
+.legend { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px 16px; color: var(--muted); font-size: 0.72rem; }
 .legend span { display: flex; align-items: center; gap: 6px; }
 .legend i { display: inline-block; width: 20px; height: 8px; }
 .legend-line { border-top: 3px solid var(--blue); }
 .legend-band { border: 1px solid #9db91d; background: rgba(200, 241, 53, 0.42); }
+.legend-weight { border-radius: 3px; background: var(--coral); opacity: 0.72; }
 
 .chart-stage { margin-top: 20px; }
 .posterior-chart { display: block; width: 100%; overflow: visible; touch-action: none; cursor: crosshair; }
@@ -284,6 +286,7 @@ a:focus-visible { outline: 3px solid var(--lime); outline-offset: 3px; }
 .axis-label { font-size: 12px; }
 .axis-title { font-size: 13px; font-weight: 600; }
 .prior-path { fill: none; stroke: #737985; stroke-width: 2; stroke-dasharray: 8 6; }
+.posterior-band { fill: url(#credible); stroke: none; }
 .posterior-path {
   fill: none;
   stroke: var(--blue);
@@ -299,11 +302,15 @@ a:focus-visible { outline: 3px solid var(--lime); outline-offset: 3px; }
   animation: pop-in 380ms ease both;
 }
 .query-line { stroke: var(--blue); stroke-width: 1.5; stroke-dasharray: 6 5; }
+.interval-line { stroke: var(--blue); stroke-width: 2.2; }
 .query-point { fill: var(--blue); stroke: var(--card); stroke-width: 2; }
+.weight-bar { fill: var(--coral); opacity: 0.72; }
+.weight-label { fill: var(--coral); font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; font-size: 11px; font-weight: 700; }
 .tooltip-card rect { fill: rgba(255, 253, 247, 0.97); stroke: #8a909b; }
 .tooltip-value { fill: var(--blue); font-family: var(--font-geist-mono), monospace; font-size: 14px; font-weight: 750; }
 .tooltip-label { fill: #525965; font-size: 9.5px; }
 
+.chart-controls { display: grid; gap: 5px; }
 .query-control {
   display: grid;
   grid-template-columns: auto 1fr 46px;
@@ -323,6 +330,15 @@ a:focus-visible { outline: 3px solid var(--lime); outline-offset: 3px; }
   font-family: var(--font-geist-mono), monospace;
   font-weight: 700;
   text-align: center;
+}
+.chart-equation {
+  margin: 10px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid rgba(16, 19, 26, 0.15);
+  color: #505764;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 0.68rem;
+  line-height: 1.5;
 }
 
 .method-strip {

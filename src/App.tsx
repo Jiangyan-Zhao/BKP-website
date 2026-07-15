@@ -2,38 +2,137 @@ import { useMemo, useState } from "react";
 
 type Mode = "Binary" | "Binomial" | "Multinomial";
 
-const modeData: Record<
-  Mode,
-  { alpha: number; beta: number; interval: [number, number]; observations: number[]; label: string }
-> = {
+type ModeDataset = {
+  model: "BKP" | "DKP";
+  label: string;
+  responseLabel: string;
+  xs: number[];
+  counts: number[][];
+  theta: number;
+};
+
+const modeData: Record<Mode, ModeDataset> = {
   Binary: {
-    alpha: 8,
-    beta: 5,
-    interval: [0.42, 0.78],
-    observations: [0.29, 0.35, 0.4, 0.52, 0.54, 0.7, 0.75, 0.79, 0.87, 0.92],
-    label: "Bernoulli responses",
+    model: "BKP",
+    label: "Binary · BKP",
+    responseLabel: "Bernoulli observations",
+    xs: [0.06, 0.13, 0.2, 0.28, 0.35, 0.43, 0.5, 0.58, 0.65, 0.72, 0.8, 0.87, 0.94],
+    counts: [[0, 1], [0, 1], [1, 0], [0, 1], [1, 0], [0, 1], [1, 0], [1, 0], [1, 0], [1, 0], [0, 1], [1, 0], [1, 0]],
+    theta: 0.2,
   },
   Binomial: {
-    alpha: 13,
-    beta: 7,
-    interval: [0.51, 0.76],
-    observations: [0.33, 0.4, 0.47, 0.51, 0.58, 0.64, 0.72, 0.81, 0.88],
-    label: "Aggregated counts",
+    model: "BKP",
+    label: "Binomial · BKP",
+    responseLabel: "Observed proportions",
+    xs: [0.05, 0.14, 0.23, 0.32, 0.41, 0.5, 0.59, 0.68, 0.77, 0.86, 0.95],
+    counts: [[2, 18], [3, 17], [5, 15], [9, 11], [14, 6], [17, 3], [16, 4], [12, 8], [7, 13], [4, 16], [3, 17]],
+    theta: 0.18,
   },
   Multinomial: {
-    alpha: 6,
-    beta: 8,
-    interval: [0.24, 0.59],
-    observations: [0.12, 0.2, 0.27, 0.34, 0.39, 0.45, 0.53, 0.61, 0.72],
-    label: "Class-one marginal",
+    model: "DKP",
+    label: "Multinomial · DKP",
+    responseLabel: "Class 1 proportions",
+    xs: [0.05, 0.14, 0.23, 0.32, 0.41, 0.5, 0.59, 0.68, 0.77, 0.86, 0.95],
+    counts: [[16, 3, 1], [15, 4, 1], [12, 6, 2], [9, 8, 3], [6, 10, 4], [4, 11, 5], [3, 9, 8], [2, 7, 11], [2, 5, 13], [1, 4, 15], [1, 3, 16]],
+    theta: 0.2,
   },
 };
 
-const chart = { left: 56, top: 24, width: 612, height: 248 };
+const chart = { left: 58, top: 22, width: 604, height: 226, weightTop: 286, weightHeight: 32 };
 
-function density(x: number, alpha: number, beta: number) {
-  if (x <= 0 || x >= 1) return 0;
-  return Math.pow(x, alpha - 1) * Math.pow(1 - x, beta - 1);
+function logGamma(z: number): number {
+  const coefficients = [
+    676.5203681218851, -1259.1392167224028, 771.3234287776531,
+    -176.6150291621406, 12.507343278686905, -0.13857109526572012,
+    9.984369578019572e-6, 1.5056327351493116e-7,
+  ];
+  if (z < 0.5) return Math.log(Math.PI) - Math.log(Math.sin(Math.PI * z)) - logGamma(1 - z);
+  let x = 0.9999999999998099;
+  const shifted = z - 1;
+  coefficients.forEach((coefficient, index) => { x += coefficient / (shifted + index + 1); });
+  const t = shifted + coefficients.length - 0.5;
+  return 0.5 * Math.log(2 * Math.PI) + (shifted + 0.5) * Math.log(t) - t + Math.log(x);
+}
+
+function betaContinuedFraction(a: number, b: number, x: number) {
+  const maxIterations = 100;
+  const epsilon = 3e-9;
+  const tiny = 1e-30;
+  const qab = a + b;
+  const qap = a + 1;
+  const qam = a - 1;
+  let c = 1;
+  let d = 1 - (qab * x) / qap;
+  if (Math.abs(d) < tiny) d = tiny;
+  d = 1 / d;
+  let h = d;
+  for (let iteration = 1; iteration <= maxIterations; iteration += 1) {
+    const m2 = 2 * iteration;
+    let aa = (iteration * (b - iteration) * x) / ((qam + m2) * (a + m2));
+    d = 1 + aa * d;
+    if (Math.abs(d) < tiny) d = tiny;
+    c = 1 + aa / c;
+    if (Math.abs(c) < tiny) c = tiny;
+    d = 1 / d;
+    h *= d * c;
+    aa = -((a + iteration) * (qab + iteration) * x) / ((a + m2) * (qap + m2));
+    d = 1 + aa * d;
+    if (Math.abs(d) < tiny) d = tiny;
+    c = 1 + aa / c;
+    if (Math.abs(c) < tiny) c = tiny;
+    d = 1 / d;
+    const delta = d * c;
+    h *= delta;
+    if (Math.abs(delta - 1) < epsilon) break;
+  }
+  return h;
+}
+
+function regularizedBeta(x: number, a: number, b: number) {
+  if (x <= 0) return 0;
+  if (x >= 1) return 1;
+  const factor = Math.exp(logGamma(a + b) - logGamma(a) - logGamma(b) + a * Math.log(x) + b * Math.log(1 - x));
+  if (x < (a + 1) / (a + b + 2)) return (factor * betaContinuedFraction(a, b, x)) / a;
+  return 1 - (factor * betaContinuedFraction(b, a, 1 - x)) / b;
+}
+
+function betaQuantile(probability: number, a: number, b: number) {
+  let low = 0;
+  let high = 1;
+  for (let iteration = 0; iteration < 38; iteration += 1) {
+    const midpoint = (low + high) / 2;
+    if (regularizedBeta(midpoint, a, b) < probability) low = midpoint;
+    else high = midpoint;
+  }
+  return (low + high) / 2;
+}
+
+function kernelWeight(x: number, observedX: number, theta: number) {
+  return Math.exp(-Math.pow((x - observedX) / theta, 2));
+}
+
+function posteriorAt(x: number, dataset: ModeDataset, theta: number) {
+  const classCount = dataset.counts[0].length;
+  const shapes = Array.from({ length: classCount }, () => 1);
+  let localCount = 0;
+  dataset.xs.forEach((observedX, observationIndex) => {
+    const weight = kernelWeight(x, observedX, theta);
+    dataset.counts[observationIndex].forEach((count, classIndex) => {
+      shapes[classIndex] += weight * count;
+      localCount += classIndex === 0 ? weight * count : 0;
+    });
+  });
+  const total = shapes.reduce((sum, value) => sum + value, 0);
+  const alpha = shapes[0];
+  const beta = total - alpha;
+  return {
+    mean: alpha / total,
+    low: betaQuantile(0.025, alpha, beta),
+    high: betaQuantile(0.975, alpha, beta),
+    shapes,
+    pseudoCount: total - classCount,
+    weightedSuccesses: localCount,
+  };
 }
 
 function GithubIcon() {
@@ -49,32 +148,37 @@ function GithubIcon() {
 
 function PosteriorChart() {
   const [mode, setMode] = useState<Mode>("Binary");
-  const [query, setQuery] = useState(0.63);
+  const [query, setQuery] = useState(0.58);
+  const [theta, setTheta] = useState(modeData.Binary.theta);
   const current = modeData[mode];
 
-  const curves = useMemo(() => {
+  const curve = useMemo(() => {
     const points = Array.from({ length: 101 }, (_, i) => i / 100);
-    const posteriorRaw = points.map((x) => density(x, current.alpha, current.beta));
-    const priorRaw = points.map((x) => density(x, 2, 2));
-    const posteriorMax = Math.max(...posteriorRaw);
-    const priorMax = Math.max(...priorRaw);
-    const makePath = (values: number[], max: number) =>
-      values
-        .map((value, i) => {
-          const x = chart.left + (i / 100) * chart.width;
-          const y = chart.top + chart.height - (value / max) * (chart.height - 18);
-          return `${i === 0 ? "M" : "L"}${x.toFixed(1)},${y.toFixed(1)}`;
-        })
-        .join(" ");
+    const summaries = points.map((x) => posteriorAt(x, current, theta));
+    const makePath = (values: number[]) => values.map((value, index) => {
+      const px = chart.left + points[index] * chart.width;
+      const py = chart.top + (1 - value) * chart.height;
+      return `${index === 0 ? "M" : "L"}${px.toFixed(1)},${py.toFixed(1)}`;
+    }).join(" ");
+    const upper = summaries.map((summary) => summary.high);
+    const lower = summaries.map((summary) => summary.low);
+    const band = `${makePath(upper)} ${lower.map((value, reverseIndex) => {
+      const index = lower.length - 1 - reverseIndex;
+      const px = chart.left + points[index] * chart.width;
+      const py = chart.top + (1 - value) * chart.height;
+      return `L${px.toFixed(1)},${py.toFixed(1)}`;
+    }).join(" ")} Z`;
     return {
-      posterior: makePath(posteriorRaw, posteriorMax),
-      prior: makePath(priorRaw, priorMax * 1.7),
-      queryDensity: density(query, current.alpha, current.beta) / posteriorMax,
+      mean: makePath(summaries.map((summary) => summary.mean)),
+      band,
     };
-  }, [current, query]);
+  }, [current, theta]);
 
+  const queryPosterior = useMemo(() => posteriorAt(query, current, theta), [query, current, theta]);
   const queryX = chart.left + query * chart.width;
-  const queryY = chart.top + chart.height - curves.queryDensity * (chart.height - 18);
+  const queryY = chart.top + (1 - queryPosterior.mean) * chart.height;
+  const queryLowY = chart.top + (1 - queryPosterior.low) * chart.height;
+  const queryHighY = chart.top + (1 - queryPosterior.high) * chart.height;
 
   function setFromPointer(clientX: number, element: SVGSVGElement) {
     const rect = element.getBoundingClientRect();
@@ -84,33 +188,37 @@ function PosteriorChart() {
   }
 
   return (
-    <div className="chart-shell" aria-label="Interactive posterior probability explorer">
+    <div className="chart-shell" aria-label="Interactive Beta Kernel Process explorer">
       <div className="chart-topline">
         <div className="mode-switch" role="tablist" aria-label="Response type">
           {(Object.keys(modeData) as Mode[]).map((item) => (
             <button
               className={mode === item ? "active" : ""}
               key={item}
-              onClick={() => setMode(item)}
+              onClick={() => {
+                setMode(item);
+                setTheta(modeData[item].theta);
+              }}
               role="tab"
               aria-selected={mode === item}
             >
-              {item}
+              {modeData[item].label}
             </button>
           ))}
         </div>
         <div className="legend" aria-hidden="true">
-          <span><i className="legend-line" />Posterior</span>
-          <span><i className="legend-band" />95% CrI</span>
+          <span><i className="legend-line" />Posterior mean</span>
+          <span><i className="legend-band" />95% pointwise CrI</span>
+          <span><i className="legend-weight" />Kernel weight</span>
         </div>
       </div>
 
       <div className="chart-stage">
         <svg
           className="posterior-chart"
-          viewBox="0 0 720 330"
+          viewBox="0 0 720 382"
           role="img"
-          aria-label={`${mode} posterior density. Query probability ${query.toFixed(2)}.`}
+          aria-label={`${current.label} probability surface. Query input ${query.toFixed(2)}.`}
           onPointerDown={(event) => {
             event.currentTarget.setPointerCapture(event.pointerId);
             setFromPointer(event.clientX, event.currentTarget);
@@ -131,70 +239,91 @@ function PosteriorChart() {
             </filter>
           </defs>
 
-          {[0, 1, 2, 3, 4].map((tick) => {
-            const y = chart.top + (tick / 4) * chart.height;
-            return <line key={tick} x1={chart.left} x2={chart.left + chart.width} y1={y} y2={y} className="grid-line" />;
+          {[0, 0.25, 0.5, 0.75, 1].map((tick) => {
+            const y = chart.top + (1 - tick) * chart.height;
+            return (
+              <g key={tick}>
+                <line x1={chart.left} x2={chart.left + chart.width} y1={y} y2={y} className="grid-line" />
+                <text x={chart.left - 12} y={y + 4} textAnchor="end" className="axis-label">{tick.toFixed(2)}</text>
+              </g>
+            );
           })}
           {[0, 0.25, 0.5, 0.75, 1].map((tick) => {
             const x = chart.left + tick * chart.width;
             return (
               <g key={tick}>
                 <line x1={x} x2={x} y1={chart.top} y2={chart.top + chart.height} className="grid-line" />
-                <text x={x} y="302" textAnchor="middle" className="axis-label">{tick.toFixed(2)}</text>
+                <text x={x} y="270" textAnchor="middle" className="axis-label">{tick.toFixed(2)}</text>
               </g>
             );
           })}
 
-          <rect
-            x={chart.left + current.interval[0] * chart.width}
-            y={chart.top}
-            width={(current.interval[1] - current.interval[0]) * chart.width}
-            height={chart.height}
-            fill="url(#credible)"
-          />
-          <path d={curves.prior} className="prior-path" />
-          <path d={curves.posterior} className="posterior-path" />
+          <path d={curve.band} className="posterior-band" />
+          <path d={curve.mean} className="posterior-path" />
 
-          {current.observations.map((x, index) => (
+          {current.xs.map((x, index) => {
+            const total = current.counts[index].reduce((sum, value) => sum + value, 0);
+            const proportion = current.counts[index][0] / total;
+            const weight = kernelWeight(query, x, theta);
+            return (
+            <g key={`${mode}-${index}`}>
+              <rect
+                x={chart.left + x * chart.width - 3}
+                y={chart.weightTop + chart.weightHeight * (1 - weight)}
+                width="6"
+                height={chart.weightHeight * weight}
+                rx="3"
+                className="weight-bar"
+              />
             <circle
-              key={`${mode}-${index}`}
               cx={chart.left + x * chart.width}
-              cy={chart.top + chart.height - 7 - (index % 2) * 5}
-              r="5"
+              cy={chart.top + (1 - proportion) * chart.height}
+              r={current.model === "BKP" && total === 1 ? 5.5 : Math.min(8, 4 + total / 10)}
               className="observation"
             />
-          ))}
+            </g>
+          );})}
 
           <line x1={queryX} x2={queryX} y1={chart.top} y2={chart.top + chart.height} className="query-line" />
+          <line x1={queryX} x2={queryX} y1={queryHighY} y2={queryLowY} className="interval-line" />
+          <line x1={queryX - 7} x2={queryX + 7} y1={queryHighY} y2={queryHighY} className="interval-line" />
+          <line x1={queryX - 7} x2={queryX + 7} y1={queryLowY} y2={queryLowY} className="interval-line" />
           <circle cx={queryX} cy={queryY} r="8" className="query-point" />
-          <circle cx={queryX} cy={chart.top + chart.height} r="8" className="query-point" />
 
           <g
             className="tooltip-card"
-            transform={`translate(${Math.min(queryX + 18, 492)}, ${Math.max(queryY - 28, 34)})`}
+            transform={`translate(${Math.min(queryX + 18, 458)}, ${Math.max(queryY - 42, 28)})`}
             filter="url(#tooltipShadow)"
           >
-            <rect width="172" height="76" rx="9" />
-            <text x="15" y="27" className="tooltip-value">p = {query.toFixed(2)}</text>
-            <text x="15" y="50" className="tooltip-label">{current.label}</text>
-            <text x="15" y="67" className="tooltip-label">95% CrI [{current.interval[0]}, {current.interval[1]}]</text>
+            <rect width="205" height="96" rx="9" />
+            <text x="15" y="25" className="tooltip-value">x₀ = {query.toFixed(2)}</text>
+            <text x="15" y="48" className="tooltip-label">π̂(x₀) = {queryPosterior.mean.toFixed(3)}</text>
+            <text x="15" y="66" className="tooltip-label">95% CrI [{queryPosterior.low.toFixed(3)}, {queryPosterior.high.toFixed(3)}]</text>
+            <text x="15" y="84" className="tooltip-label">weighted trials = {queryPosterior.pseudoCount.toFixed(1)}</text>
           </g>
-          <text x="362" y="326" textAnchor="middle" className="axis-title">Probability</text>
+          <text x="18" y="136" textAnchor="middle" transform="rotate(-90 18 136)" className="axis-title">Probability</text>
+          <text x="360" y="341" textAnchor="middle" className="weight-label">Gaussian weights k(x₀, xᵢ)</text>
+          <text x="360" y="374" textAnchor="middle" className="axis-title">Input x</text>
         </svg>
       </div>
 
-      <label className="query-control">
-        <span>Explore probability</span>
-        <input
-          type="range"
-          min="5"
-          max="95"
-          value={Math.round(query * 100)}
-          onChange={(event) => setQuery(Number(event.target.value) / 100)}
-          aria-label="Posterior query probability"
-        />
-        <output>{query.toFixed(2)}</output>
-      </label>
+      <div className="chart-controls">
+        <label className="query-control">
+          <span>Query input x₀</span>
+          <input type="range" min="2" max="98" value={Math.round(query * 100)} onChange={(event) => setQuery(Number(event.target.value) / 100)} aria-label="BKP query input" />
+          <output>{query.toFixed(2)}</output>
+        </label>
+        <label className="query-control">
+          <span>Length scale θ</span>
+          <input type="range" min="8" max="38" value={Math.round(theta * 100)} onChange={(event) => setTheta(Number(event.target.value) / 100)} aria-label="Gaussian kernel length scale" />
+          <output>{theta.toFixed(2)}</output>
+        </label>
+      </div>
+      <p className="chart-equation">
+        {current.model === "BKP"
+          ? "αₙ(x₀)=α₀+Σ k(x₀,xᵢ)yᵢ · βₙ(x₀)=β₀+Σ k(x₀,xᵢ)(mᵢ−yᵢ)"
+          : "DKP class-1 marginal · αₙⱼ(x₀)=α₀ⱼ+Σ k(x₀,xᵢ)yᵢⱼ"}
+      </p>
     </div>
   );
 }
@@ -363,7 +492,7 @@ export default function Home() {
 
         <div className="hero-visual">
           <span className="formula-note" aria-hidden="true">
-            p ∈ (0, 1)<br />θ ~ Beta(a₀, b₀)<br />yᵢ ~ Bernoulli(pᵢ)
+            π(x) | 𝒟ₙ ~ Beta(αₙ(x), βₙ(x))<br />αₙ(x) = α₀(x) + Σ k(x,xᵢ)yᵢ<br />βₙ(x) = β₀(x) + Σ k(x,xᵢ)(mᵢ−yᵢ)
           </span>
           <PosteriorChart />
         </div>
