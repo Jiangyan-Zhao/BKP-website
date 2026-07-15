@@ -193,6 +193,7 @@ function PosteriorChart() {
   const [query, setQuery] = useState(-0.1);
   const [gamma, setGamma] = useState(example2Fit.gamma);
   const theta = Math.pow(10, gamma);
+  const originalFigureUrl = `${import.meta.env.BASE_URL}results/ex2.pdf`;
 
   const curve = useMemo(() => {
     const points = Array.from({ length: 161 }, (_, i) => -2 + (4 * i) / 160);
@@ -250,6 +251,7 @@ function PosteriorChart() {
             <MathFormula>{"x\\in[-2,2]"}</MathFormula><i>·</i>
             noninformative <MathFormula>{"\\operatorname{Beta}(1,1)"}</MathFormula> prior
           </small>
+          <a className="paper-example-link" href={originalFigureUrl} target="_blank" rel="noreferrer">Original PDF ↗</a>
         </div>
         <div className="legend" aria-hidden="true">
           <span><i className="legend-line" />Posterior mean</span>
@@ -470,7 +472,7 @@ function TwinBkpExplorer() {
       </header>
 
       <figure className="twin-figure">
-        <svg viewBox="0 0 1000 448" role="img" aria-label={`TwinBKP global and local training points for query x zero equals ${query.toFixed(2)}`}>
+        <svg viewBox="0 0 1160 448" role="img" aria-label={`TwinBKP global and local training points for query x zero equals ${query.toFixed(2)}`}>
           <rect className="twin-plot-background" x={twinChart.left} y={twinChart.top} width={twinChart.width} height={twinChart.height} />
           {[0, 0.25, 0.5, 0.75, 1].map((tick) => (
             <g key={`y-${tick}`}>
@@ -521,7 +523,7 @@ function TwinBkpExplorer() {
             </foreignObject>
           </g>
 
-          <g className="twin-plot-legend" transform="translate(104 74)">
+          <g className="twin-plot-legend" transform="translate(962 160)">
             <rect x="-15" y="-24" width="190" height="139" rx="7" />
             <circle className="twin-training-point legend-point" cx="0" cy="0" r="3" /><text x="20" y="5">Training data</text>
             <path className="twin-test-point" d="M-4,19 L4,27 M4,19 L-4,27" /><text x="20" y="27">Testing location</text>
@@ -595,7 +597,7 @@ function TwinBkpExplorer() {
   );
 }
 
-type ExampleKey = "curve" | "surface" | "warbler";
+type ExampleKey = "surface" | "warbler";
 
 const examples: Record<
   ExampleKey,
@@ -609,15 +611,6 @@ const examples: Record<
     sourceUrl: string;
   }
 > = {
-  curve: {
-    title: "Nonlinear BKP posterior",
-    description: "The original Example 2 figure compares the fitted posterior mean and pointwise 95% credible interval with observed proportions and the true nonlinear probability function.",
-    tag: "BKP · Example 2",
-    figure: "/results/ex2.pdf",
-    alt: "BKP posterior mean and 95 percent credible interval for the nonlinear binomial example",
-    source: "s4_ex2_bkp_1d_nonlinear.R",
-    sourceUrl: "https://github.com/Jiangyan-Zhao/BKP-paper/blob/master/code/s4_ex2_bkp_1d_nonlinear.R",
-  },
   surface: {
     title: "Iris multiclass classification",
     description: "The original Example 7 figure shows the DKP classification regions and maximum predicted class probability, making uncertain decision boundaries visible.",
@@ -639,7 +632,7 @@ const examples: Record<
 };
 
 function ExampleExplorer() {
-  const [selected, setSelected] = useState<ExampleKey>("curve");
+  const [selected, setSelected] = useState<ExampleKey>("surface");
   const figureUrl = `${import.meta.env.BASE_URL}${examples[selected].figure.replace(/^\//, "")}`;
   return (
     <div className="example-explorer">
@@ -850,11 +843,11 @@ export default function Home() {
 
         <div className="results-intro">
           <div>
-            <p className="section-kicker">Original paper results</p>
-            <h3>Inspect the evidence. Reproduce every figure.</h3>
+            <p className="section-kicker">Selected paper results</p>
+            <h3>Compare fitted results. Reproduce each analysis.</h3>
           </div>
           <p>
-            Each panel embeds the original vector PDF from BKP-paper. Open a figure at
+            Each panel embeds an original vector PDF from BKP-paper. Open a figure at
             full resolution or follow its R script to reproduce the published result.
           </p>
         </div>
