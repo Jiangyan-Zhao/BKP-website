@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import katex from "katex";
 
 type Example2Observation = {
@@ -712,15 +712,44 @@ function InstallPanel() {
 }
 
 export default function Home() {
+  const [activeSection, setActiveSection] = useState("overview");
+
+  useEffect(() => {
+    const sectionIds = ["overview", "install", "method", "examples", "resources"];
+    let frame = 0;
+    const updateActiveSection = () => {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(() => {
+        const marker = window.scrollY + Math.min(180, window.innerHeight * 0.28);
+        let current = sectionIds[0];
+        sectionIds.forEach((id) => {
+          const section = document.getElementById(id);
+          if (section && section.offsetTop <= marker) current = id;
+        });
+        setActiveSection(current);
+      });
+    };
+
+    updateActiveSection();
+    window.addEventListener("scroll", updateActiveSection, { passive: true });
+    window.addEventListener("resize", updateActiveSection);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", updateActiveSection);
+      window.removeEventListener("resize", updateActiveSection);
+    };
+  }, []);
+
   return (
     <main>
       <header className="site-header">
         <a className="wordmark" href="#overview" aria-label="BKP home">BKP</a>
         <nav aria-label="Primary navigation">
-          <a className="active" href="#overview">Overview</a>
-          <a href="#install">Install</a>
-          <a href="#method">Method</a>
-          <a href="#examples">Examples</a>
+          <a className={activeSection === "overview" ? "active" : ""} href="#overview">Overview</a>
+          <a className={activeSection === "install" ? "active" : ""} href="#install">Install</a>
+          <a className={activeSection === "method" ? "active" : ""} href="#method">Method</a>
+          <a className={activeSection === "examples" ? "active" : ""} href="#examples">Examples</a>
+          <a className={activeSection === "resources" ? "active" : ""} href="#resources">Resources</a>
         </nav>
         <div className="header-links">
           <a href="https://github.com/Jiangyan-Zhao/BKP" target="_blank" rel="noreferrer">
@@ -780,31 +809,41 @@ export default function Home() {
         <InstallPanel />
       </section>
 
-      <section className="method-strip" id="method" aria-labelledby="method-title">
-        <div className="strip-heading">
-          <span className="binder-hole" aria-hidden="true" />
-          <h2 id="method-title">Method in a nutshell</h2>
+      <section className="method-section" id="method" aria-labelledby="method-title">
+        <div className="method-strip">
+          <div className="strip-heading">
+            <span className="binder-hole" aria-hidden="true" />
+            <h2 id="method-title">Method in a nutshell</h2>
+          </div>
+          <ol>
+            <li><span>1</span><p>Place a Beta or Dirichlet prior directly on the response probability.</p></li>
+            <li><span>2</span><p>Borrow evidence through localized, kernel-weighted pseudo-counts.</p></li>
+            <li><span>3</span><p>Return closed-form posterior summaries, predictions, and uncertainty.</p></li>
+          </ol>
+          <div className="mini-density" aria-hidden="true">⌁</div>
         </div>
-        <ol>
-          <li><span>1</span><p>Place a Beta or Dirichlet prior directly on the response probability.</p></li>
-          <li><span>2</span><p>Borrow evidence through localized, kernel-weighted pseudo-counts.</p></li>
-          <li><span>3</span><p>Return closed-form posterior summaries, predictions, and uncertainty.</p></li>
-        </ol>
-        <div className="mini-density" aria-hidden="true">⌁</div>
+
+        <div className="method-body">
+          <div className="section-intro">
+            <p className="section-kicker">One grammar, four paths</p>
+            <h2>Pick the model that matches the outcome.</h2>
+            <p>Choose BKP or DKP by response type, then use a Twin variant when the data call for a scalable global–local approximation.</p>
+          </div>
+
+          <div className="model-grid">
+            <article><span>01</span><h3>BKP</h3><p>Full modeling for binary or aggregated binomial responses.</p><code>fit_BKP()</code></article>
+            <article><span>02</span><h3>DKP</h3><p>Full modeling for categorical or multinomial responses.</p><code>fit_DKP()</code></article>
+            <article><span>03</span><h3>TwinBKP</h3><p>A global–local approximation for larger binomial datasets.</p><code>fit_TwinBKP()</code></article>
+            <article><span>04</span><h3>TwinDKP</h3><p>A global–local approximation for larger multiclass datasets.</p><code>fit_TwinDKP()</code></article>
+          </div>
+        </div>
       </section>
 
       <section className="examples-section" id="examples" aria-labelledby="examples-title">
         <div className="section-intro">
-          <p className="section-kicker">One grammar, four paths</p>
-          <h2 id="examples-title">Pick the model that matches the outcome.</h2>
-          <p>Choose BKP or DKP by response type, then use a Twin variant when the data call for a scalable global–local approximation.</p>
-        </div>
-
-        <div className="model-grid">
-          <article><span>01</span><h3>BKP</h3><p>Full modeling for binary or aggregated binomial responses.</p><code>fit_BKP()</code></article>
-          <article><span>02</span><h3>DKP</h3><p>Full modeling for categorical or multinomial responses.</p><code>fit_DKP()</code></article>
-          <article><span>03</span><h3>TwinBKP</h3><p>A global–local approximation for larger binomial datasets.</p><code>fit_TwinBKP()</code></article>
-          <article><span>04</span><h3>TwinDKP</h3><p>A global–local approximation for larger multiclass datasets.</p><code>fit_TwinDKP()</code></article>
+          <p className="section-kicker">Interactive example</p>
+          <h2 id="examples-title">From mechanism to published evidence.</h2>
+          <p>Move the testing location to see the local subset update around a fixed global design, then compare the reconstruction with the original paper results.</p>
         </div>
 
         <TwinBkpExplorer />
@@ -822,7 +861,7 @@ export default function Home() {
         <ExampleExplorer />
       </section>
 
-      <section className="resources-section" aria-labelledby="resources-title">
+      <section className="resources-section" id="resources" aria-labelledby="resources-title">
         <header className="resources-heading">
           <div>
             <p className="section-kicker">Project resources</p>

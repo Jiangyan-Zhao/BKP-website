@@ -538,12 +538,15 @@ a:focus-visible { outline: 3px solid var(--lime); outline-offset: 3px; }
 }
 
 .examples-section,
+.method-body,
 .install-section,
 .resources-section {
   padding: clamp(76px, 8vw, 120px) 4.2vw;
 }
 
+.method-body,
 .examples-section { background: var(--paper); }
+.examples-section { border-top: 1px solid var(--ink); }
 .section-intro { display: grid; grid-template-columns: 0.72fr 1.55fr 0.9fr; gap: 44px; align-items: end; }
 .section-kicker {
   margin: 0 0 10px;
@@ -902,6 +905,10 @@ footer a:hover { color: var(--blue); }
 }
 
 @media (max-width: 1120px) {
+  .wordmark { margin-right: 22px; padding-right: 24px; }
+  .site-header nav { gap: 20px; }
+  .header-links { gap: 16px; }
+  .header-links a:last-child { display: none; }
   .hero { grid-template-columns: 0.9fr 1.2fr; gap: 30px; padding-inline: 3vw; }
   .hero h1 { font-size: 8.2rem; }
   .formula-note { display: none; }
@@ -985,6 +992,7 @@ footer a:hover { color: var(--blue); }
   .strip-heading { padding-left: 94px; }
   .method-strip ol { padding-left: 72px; }
   .examples-section,
+  .method-body,
   .install-section,
   .resources-section { padding: 72px 22px; }
   .model-grid { grid-template-columns: 1fr; }
