@@ -587,7 +587,6 @@ a:focus-visible { outline: 3px solid var(--lime); outline-offset: 3px; }
 .twin-plot-background { fill: #fff; stroke: #202126; stroke-width: 1.25; }
 .twin-plot-grid { stroke: #e1e2e5; stroke-width: 1; }
 .twin-plot-tick,
-.twin-test-label,
 .twin-plot-legend text { fill: #17191f; font-family: Arial, Helvetica, sans-serif; }
 .twin-plot-tick { font-size: 13px; }
 .twin-axis-math { overflow: visible; }
@@ -599,7 +598,6 @@ a:focus-visible { outline: 3px solid var(--lime); outline-offset: 3px; }
 .twin-local-point { fill: #fff; stroke: #00bf83; stroke-width: 2.25; }
 .twin-query-guide { stroke: #ff6b5f; stroke-width: 1; stroke-dasharray: 4 5; opacity: 0.56; }
 .twin-test-point { fill: none; stroke: #ff6b5f; stroke-width: 1.8; }
-.twin-test-label { fill: #ff6b5f; font-size: 13px; font-style: italic; }
 .twin-plot-legend rect { fill: rgba(255, 255, 255, 0.95); stroke: #d8dade; stroke-width: 0.8; }
 .twin-plot-legend text { font-size: 14px; }
 .twin-plot-legend .legend-point { opacity: 1; }

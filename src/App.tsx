@@ -506,7 +506,6 @@ function TwinBkpExplorer() {
           })}
 
           <path className="twin-test-point" d={`M${xPosition(query) - 6},493 L${xPosition(query) + 6},505 M${xPosition(query) + 6},493 L${xPosition(query) - 6},505`} />
-          <text className="twin-test-label" x={xPosition(query)} y="526" textAnchor="middle">x₀</text>
           <foreignObject className="twin-axis-math" x="456" y="532" width="80" height="28" aria-hidden="true">
             <div><MathFormula>{"x"}</MathFormula></div>
           </foreignObject>
