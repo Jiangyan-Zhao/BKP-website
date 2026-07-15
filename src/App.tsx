@@ -768,6 +768,18 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="install-section" id="install" aria-labelledby="install-title">
+        <div className="install-intro">
+          <p className="section-kicker">Start in R</p>
+          <h2 id="install-title">From data to posterior in a few lines.</h2>
+          <p>
+            Install the stable CRAN release, then fit, predict, simulate, and visualize
+            posterior summaries through a consistent set of S3 methods.
+          </p>
+        </div>
+        <InstallPanel />
+      </section>
+
       <section className="method-strip" id="method" aria-labelledby="method-title">
         <div className="strip-heading">
           <span className="binder-hole" aria-hidden="true" />
@@ -810,17 +822,17 @@ export default function Home() {
         <ExampleExplorer />
       </section>
 
-      <section className="start-section" id="install" aria-labelledby="install-title">
-        <div className="start-copy">
-          <p className="section-kicker">Start in R</p>
-          <h2 id="install-title">From data to posterior in a few lines.</h2>
+      <section className="resources-section" aria-labelledby="resources-title">
+        <header className="resources-heading">
+          <div>
+            <p className="section-kicker">Project resources</p>
+            <h2 id="resources-title">Read, reproduce, and contribute.</h2>
+          </div>
           <p>
-            Install the stable CRAN release, then fit, predict, simulate, and visualize
-            posterior summaries through a consistent set of S3 methods.
+            Follow the paper, inspect the source, install the stable package, or reproduce
+            the published analyses from the companion repository.
           </p>
-          <InstallPanel />
-        </div>
-
+        </header>
         <aside className="resource-stack" aria-label="Project resources">
           <a className="paper-card" href="https://arxiv.org/abs/2508.10447" target="_blank" rel="noreferrer">
             <span className="resource-type">Paper · arXiv</span>

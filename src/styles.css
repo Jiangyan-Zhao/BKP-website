@@ -538,7 +538,8 @@ a:focus-visible { outline: 3px solid var(--lime); outline-offset: 3px; }
 }
 
 .examples-section,
-.start-section {
+.install-section,
+.resources-section {
   padding: clamp(76px, 8vw, 120px) 4.2vw;
 }
 
@@ -554,7 +555,8 @@ a:focus-visible { outline: 3px solid var(--lime); outline-offset: 3px; }
   text-transform: uppercase;
 }
 .section-intro h2,
-.start-copy > h2 {
+.install-intro > h2,
+.resources-heading h2 {
   margin: 0;
   font-size: clamp(2.6rem, 4.6vw, 5.1rem);
   line-height: 0.98;
@@ -562,7 +564,8 @@ a:focus-visible { outline: 3px solid var(--lime); outline-offset: 3px; }
   font-weight: 720;
 }
 .section-intro > p:last-child,
-.start-copy > p {
+.install-intro > p,
+.resources-heading > p {
   margin: 0;
   color: var(--muted);
   font-size: 1.05rem;
@@ -788,14 +791,18 @@ a:focus-visible { outline: 3px solid var(--lime); outline-offset: 3px; }
 .twin-local { fill: var(--coral); stroke: var(--card); stroke-width: 2; }
 .twin-query { fill: var(--lime); stroke: var(--ink); stroke-width: 2; }
 
-.start-section {
+.install-section {
   display: grid;
-  grid-template-columns: minmax(0, 1.18fr) minmax(360px, 0.72fr);
-  gap: clamp(52px, 8vw, 120px);
+  grid-template-columns: minmax(300px, 0.72fr) minmax(520px, 1.28fr);
+  gap: clamp(44px, 7vw, 100px);
+  align-items: center;
+  padding-block: clamp(64px, 7vw, 96px);
   border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
   background: var(--blue-soft);
 }
-.start-copy > p { max-width: 720px; margin-top: 24px; }
+.install-intro > p { max-width: 620px; margin-top: 24px; }
+.install-section .install-panel { margin-top: 0; }
 .install-panel {
   margin-top: 44px;
   overflow: hidden;
@@ -837,7 +844,22 @@ a:focus-visible { outline: 3px solid var(--lime); outline-offset: 3px; }
 .install-command button:hover { border-color: var(--lime); color: var(--lime); }
 .install-panel pre { margin: 0; padding: 24px 22px 28px; overflow-x: auto; color: #e3e6ec; line-height: 1.75; }
 
-.resource-stack { display: grid; align-content: start; gap: 14px; }
+.resources-section { background: #f4f1e7; }
+.resources-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
+  gap: 48px;
+  align-items: end;
+  margin-bottom: 44px;
+}
+.resources-heading > p { max-width: 620px; }
+.resource-stack {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(340px, 0.8fr);
+  align-content: start;
+  gap: 14px;
+}
+.resources-section .paper-card { grid-row: 1 / span 3; }
 .paper-card,
 .resource-card { border: 1.5px solid var(--ink); transition: transform 160ms ease, box-shadow 160ms ease; }
 .paper-card:hover,
@@ -900,11 +922,8 @@ footer a:hover { color: var(--blue); }
   .example-tabs { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--ink); }
   .example-tabs button { border-right: 1px solid var(--ink); border-bottom: 0; }
   .example-tabs button:last-child { border-right: 0; }
-  .start-section { grid-template-columns: 1fr; }
-  .resource-stack { grid-template-columns: repeat(3, 1fr); }
-  .paper-card { grid-column: 1 / -1; }
-  .resource-card { grid-template-columns: 1fr auto; }
-  .resource-card span { grid-column: 1 / -1; }
+  .install-section { grid-template-columns: 1fr; }
+  .install-section .install-panel { width: min(100%, 860px); }
 }
 
 @media (max-width: 820px) {
@@ -925,6 +944,7 @@ footer a:hover { color: var(--blue); }
   .strip-heading { padding-left: 108px; }
   .section-intro { grid-template-columns: 1fr; gap: 18px; }
   .section-intro > p:last-child { grid-column: 1; }
+  .resources-heading { grid-template-columns: 1fr; gap: 18px; }
   .query-readout { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .query-readout > span { border-bottom: 1px solid rgba(16, 19, 26, 0.13); }
   .query-readout > span:nth-child(even) { border-right: 0; }
@@ -940,7 +960,7 @@ footer a:hover { color: var(--blue); }
   .example-tabs button { border-right: 0; border-bottom: 1px solid var(--ink); }
   .example-tabs button:last-child { border-bottom: 0; }
   .resource-stack { grid-template-columns: 1fr; }
-  .paper-card { grid-column: auto; }
+  .resources-section .paper-card { grid-row: auto; }
   footer { grid-template-columns: auto 1fr; }
   footer > div { grid-column: 1 / -1; }
 }
@@ -965,7 +985,8 @@ footer a:hover { color: var(--blue); }
   .strip-heading { padding-left: 94px; }
   .method-strip ol { padding-left: 72px; }
   .examples-section,
-  .start-section { padding: 72px 22px; }
+  .install-section,
+  .resources-section { padding: 72px 22px; }
   .model-grid { grid-template-columns: 1fr; }
   .model-grid article { min-height: 220px; border-right: 0; border-bottom: 1px solid var(--ink); }
   .model-grid article:nth-child(3) { border-bottom: 1px solid var(--ink); }
