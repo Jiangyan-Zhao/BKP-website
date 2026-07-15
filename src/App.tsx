@@ -749,7 +749,7 @@ export default function Home() {
             <GithubIcon /> GitHub
           </a>
           <a href="https://cran.r-project.org/package=BKP" target="_blank" rel="noreferrer">
-            <span className="r-mark">R</span> R package
+            <img className="r-project-logo" src="https://www.r-project.org/logo/Rlogo.svg" alt="" aria-hidden="true" /> R package
           </a>
         </div>
       </header>
