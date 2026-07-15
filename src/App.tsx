@@ -924,7 +924,7 @@ export default function Home() {
             </div>
             <i aria-hidden="true">★</i>
           </a>
-          <a className="resource-card lime" href="https://cran.r-project.org/web/packages/BKP/BKP.html" target="_blank" rel="noreferrer">
+          <a className="resource-card lime" href="https://cran.r-project.org/web/packages/BKP/refman/BKP.html" target="_blank" rel="noreferrer">
             <span>Documentation · 0.3.1</span><b>Function reference & package manual</b><i>↗</i>
           </a>
           <a className="resource-card coral" href="https://github.com/Jiangyan-Zhao/BKP-paper" target="_blank" rel="noreferrer">
