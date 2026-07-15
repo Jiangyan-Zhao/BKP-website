@@ -1,44 +1,54 @@
 import { useMemo, useState } from "react";
 
-type Mode = "Binary" | "Binomial" | "Multinomial";
-
-type ModeDataset = {
-  model: "BKP" | "DKP";
-  label: string;
-  responseLabel: string;
-  xs: number[];
-  counts: number[][];
-  theta: number;
+type Example2Observation = {
+  x: number;
+  trials: number;
+  successes: number;
 };
 
-const modeData: Record<Mode, ModeDataset> = {
-  Binary: {
-    model: "BKP",
-    label: "Binary · BKP",
-    responseLabel: "Bernoulli observations",
-    xs: [0.06, 0.13, 0.2, 0.28, 0.35, 0.43, 0.5, 0.58, 0.65, 0.72, 0.8, 0.87, 0.94],
-    counts: [[0, 1], [0, 1], [1, 0], [0, 1], [1, 0], [0, 1], [1, 0], [1, 0], [1, 0], [1, 0], [0, 1], [1, 0], [1, 0]],
-    theta: 0.2,
-  },
-  Binomial: {
-    model: "BKP",
-    label: "Binomial · BKP",
-    responseLabel: "Observed proportions",
-    xs: [0.05, 0.14, 0.23, 0.32, 0.41, 0.5, 0.59, 0.68, 0.77, 0.86, 0.95],
-    counts: [[2, 18], [3, 17], [5, 15], [9, 11], [14, 6], [17, 3], [16, 4], [12, 8], [7, 13], [4, 16], [3, 17]],
-    theta: 0.18,
-  },
-  Multinomial: {
-    model: "DKP",
-    label: "Multinomial · DKP",
-    responseLabel: "Class 1 proportions",
-    xs: [0.05, 0.14, 0.23, 0.32, 0.41, 0.5, 0.59, 0.68, 0.77, 0.86, 0.95],
-    counts: [[16, 3, 1], [15, 4, 1], [12, 6, 2], [9, 8, 3], [6, 10, 4], [4, 11, 5], [3, 9, 8], [2, 7, 11], [2, 5, 13], [1, 4, 15], [1, 3, 16]],
-    theta: 0.2,
-  },
+// Exact data used by BKP-paper/code/s4_ex2_bkp_1d_nonlinear.R (set.seed(123)).
+const example2Data: Example2Observation[] = [
+  { x: -0.19398072, trials: 14, successes: 13 },
+  { x: -0.70462216, trials: 67, successes: 11 },
+  { x: -0.63037211, trials: 42, successes: 7 },
+  { x: -1.74727409, trials: 50, successes: 28 },
+  { x: 0.24049041, trials: 43, successes: 26 },
+  { x: -0.86055712, trials: 14, successes: 2 },
+  { x: 1.9804429, trials: 25, successes: 13 },
+  { x: -0.08221174, trials: 90, successes: 84 },
+  { x: 1.4936816, trials: 91, successes: 52 },
+  { x: -1.16105319, trials: 69, successes: 36 },
+  { x: -1.46745774, trials: 91, successes: 49 },
+  { x: 0.75452924, trials: 57, successes: 10 },
+  { x: -1.423341, trials: 92, successes: 47 },
+  { x: -0.3557257, trials: 9, successes: 5 },
+  { x: 0.82813919, trials: 93, successes: 29 },
+  { x: -1.30019818, trials: 99, successes: 54 },
+  { x: 0.52700304, trials: 72, successes: 13 },
+  { x: 1.41500019, trials: 26, successes: 17 },
+  { x: -1.64618964, trials: 7, successes: 4 },
+  { x: -1.88528663, trials: 42, successes: 20 },
+  { x: -0.93352701, trials: 9, successes: 3 },
+  { x: 1.12523789, trials: 83, successes: 46 },
+  { x: 1.26768178, trials: 36, successes: 20 },
+  { x: 1.73026749, trials: 78, successes: 42 },
+  { x: -0.50043451, trials: 81, successes: 24 },
+  { x: 0.54768276, trials: 43, successes: 10 },
+  { x: 0.28751215, trials: 76, successes: 45 },
+  { x: 0.96260663, trials: 15, successes: 6 },
+  { x: 1.81017985, trials: 32, successes: 15 },
+  { x: 0.08972538, trials: 7, successes: 7 },
+];
+
+const example2Fit = {
+  gamma: -1.4130744966,
+  theta: 0.0386300707,
+  brier: 0.0061712436,
+  initialGamma: [-1.3494850022, 1] as const,
+  optimizerGamma: [-3, 3] as const,
 };
 
-const chart = { left: 58, top: 22, width: 604, height: 226, weightTop: 286, weightHeight: 32 };
+const chart = { left: 62, top: 50, width: 648, height: 258, weightTop: 348, weightHeight: 34 };
 
 function logGamma(z: number): number {
   const coefficients = [
@@ -107,32 +117,50 @@ function betaQuantile(probability: number, a: number, b: number) {
   return (low + high) / 2;
 }
 
-function kernelWeight(x: number, observedX: number, theta: number) {
-  return Math.exp(-Math.pow((x - observedX) / theta, 2));
+function trueExample2(x: number) {
+  const expNegativeX = Math.exp(-x);
+  return (1 + Math.exp(-x * x) * Math.cos((10 * (1 - expNegativeX)) / (1 + expNegativeX))) / 2;
 }
 
-function posteriorAt(x: number, dataset: ModeDataset, theta: number) {
-  const classCount = dataset.counts[0].length;
-  const shapes = Array.from({ length: classCount }, () => 1);
-  let localCount = 0;
-  dataset.xs.forEach((observedX, observationIndex) => {
-    const weight = kernelWeight(x, observedX, theta);
-    dataset.counts[observationIndex].forEach((count, classIndex) => {
-      shapes[classIndex] += weight * count;
-      localCount += classIndex === 0 ? weight * count : 0;
-    });
+function kernelWeight(x: number, observedX: number, theta: number) {
+  // fit_BKP() first rescales Xbounds = [-2, 2] to the unit interval.
+  const normalizedDistance = (x - observedX) / 4;
+  return Math.exp(-Math.pow(normalizedDistance / theta, 2));
+}
+
+function posteriorAt(x: number, theta: number) {
+  let alpha = 1;
+  let beta = 1;
+  let weightedTrials = 0;
+  example2Data.forEach((observation) => {
+    const weight = kernelWeight(x, observation.x, theta);
+    alpha += weight * observation.successes;
+    beta += weight * (observation.trials - observation.successes);
+    weightedTrials += weight * observation.trials;
   });
-  const total = shapes.reduce((sum, value) => sum + value, 0);
-  const alpha = shapes[0];
-  const beta = total - alpha;
   return {
-    mean: alpha / total,
+    mean: alpha / (alpha + beta),
     low: betaQuantile(0.025, alpha, beta),
     high: betaQuantile(0.975, alpha, beta),
-    shapes,
-    pseudoCount: total - classCount,
-    weightedSuccesses: localCount,
+    weightedTrials,
   };
+}
+
+function loocvBrier(gamma: number) {
+  const theta = Math.pow(10, gamma);
+  const score = example2Data.reduce((sum, observation, observationIndex) => {
+    let alpha = 1;
+    let beta = 1;
+    example2Data.forEach((neighbor, neighborIndex) => {
+      if (neighborIndex === observationIndex) return;
+      const weight = kernelWeight(observation.x, neighbor.x, theta);
+      alpha += weight * neighbor.successes;
+      beta += weight * (neighbor.trials - neighbor.successes);
+    });
+    const prediction = alpha / (alpha + beta);
+    return sum + Math.pow(prediction - observation.successes / observation.trials, 2);
+  }, 0);
+  return score / example2Data.length;
 }
 
 function GithubIcon() {
@@ -147,16 +175,15 @@ function GithubIcon() {
 }
 
 function PosteriorChart() {
-  const [mode, setMode] = useState<Mode>("Binary");
-  const [query, setQuery] = useState(0.58);
-  const [theta, setTheta] = useState(modeData.Binary.theta);
-  const current = modeData[mode];
+  const [query, setQuery] = useState(-0.1);
+  const [gamma, setGamma] = useState(example2Fit.gamma);
+  const theta = Math.pow(10, gamma);
 
   const curve = useMemo(() => {
-    const points = Array.from({ length: 101 }, (_, i) => i / 100);
-    const summaries = points.map((x) => posteriorAt(x, current, theta));
+    const points = Array.from({ length: 161 }, (_, i) => -2 + (4 * i) / 160);
+    const summaries = points.map((x) => posteriorAt(x, theta));
     const makePath = (values: number[]) => values.map((value, index) => {
-      const px = chart.left + points[index] * chart.width;
+      const px = chart.left + ((points[index] + 2) / 4) * chart.width;
       const py = chart.top + (1 - value) * chart.height;
       return `${index === 0 ? "M" : "L"}${px.toFixed(1)},${py.toFixed(1)}`;
     }).join(" ");
@@ -164,61 +191,63 @@ function PosteriorChart() {
     const lower = summaries.map((summary) => summary.low);
     const band = `${makePath(upper)} ${lower.map((value, reverseIndex) => {
       const index = lower.length - 1 - reverseIndex;
-      const px = chart.left + points[index] * chart.width;
+      const px = chart.left + ((points[index] + 2) / 4) * chart.width;
       const py = chart.top + (1 - value) * chart.height;
       return `L${px.toFixed(1)},${py.toFixed(1)}`;
     }).join(" ")} Z`;
     return {
       mean: makePath(summaries.map((summary) => summary.mean)),
+      truth: makePath(points.map(trueExample2)),
       band,
     };
-  }, [current, theta]);
+  }, [theta]);
 
-  const queryPosterior = useMemo(() => posteriorAt(query, current, theta), [query, current, theta]);
-  const queryX = chart.left + query * chart.width;
+  const queryPosterior = useMemo(() => posteriorAt(query, theta), [query, theta]);
+  const queryTruth = trueExample2(query);
+  const currentBrier = useMemo(() => loocvBrier(gamma), [gamma]);
+  const queryX = chart.left + ((query + 2) / 4) * chart.width;
   const queryY = chart.top + (1 - queryPosterior.mean) * chart.height;
   const queryLowY = chart.top + (1 - queryPosterior.low) * chart.height;
   const queryHighY = chart.top + (1 - queryPosterior.high) * chart.height;
+  const tooltipX = queryX > 470 ? queryX - 232 : queryX + 18;
+  const tooltipY = Math.min(188, Math.max(60, queryY - 48));
 
   function setFromPointer(clientX: number, element: SVGSVGElement) {
     const rect = element.getBoundingClientRect();
-    const svgX = ((clientX - rect.left) / rect.width) * 720;
-    const value = (svgX - chart.left) / chart.width;
-    setQuery(Math.min(0.95, Math.max(0.05, Number(value.toFixed(2)))));
+    const svgX = ((clientX - rect.left) / rect.width) * 772;
+    const value = ((svgX - chart.left) / chart.width) * 4 - 2;
+    setQuery(Math.min(2, Math.max(-2, Number(value.toFixed(2)))));
+  }
+
+  function formatTheta(value: number) {
+    if (value < 0.01) return value.toExponential(2);
+    if (value < 1) return value.toFixed(3);
+    if (value < 100) return value.toFixed(2);
+    return value.toFixed(0);
   }
 
   return (
     <div className="chart-shell" aria-label="Interactive Beta Kernel Process explorer">
       <div className="chart-topline">
-        <div className="mode-switch" role="tablist" aria-label="Response type">
-          {(Object.keys(modeData) as Mode[]).map((item) => (
-            <button
-              className={mode === item ? "active" : ""}
-              key={item}
-              onClick={() => {
-                setMode(item);
-                setTheta(modeData[item].theta);
-              }}
-              role="tab"
-              aria-selected={mode === item}
-            >
-              {modeData[item].label}
-            </button>
-          ))}
+        <div className="paper-example-heading">
+          <p><span>Paper · Example 2</span> Nonlinear binomial curve</p>
+          <h3>Explore the fitted BKP probability surface</h3>
+          <small>n = 30 · x ∈ [−2, 2] · noninformative Beta(1, 1) prior</small>
         </div>
         <div className="legend" aria-hidden="true">
           <span><i className="legend-line" />Posterior mean</span>
+          <span><i className="legend-truth" />True π₂(x)</span>
           <span><i className="legend-band" />95% pointwise CrI</span>
-          <span><i className="legend-weight" />Kernel weight</span>
+          <span><i className="legend-dot" />Observed yᵢ/mᵢ</span>
         </div>
       </div>
 
       <div className="chart-stage">
         <svg
           className="posterior-chart"
-          viewBox="0 0 720 382"
+          viewBox="0 0 772 424"
           role="img"
-          aria-label={`${current.label} probability surface. Query input ${query.toFixed(2)}.`}
+          aria-label={`BKP-paper Example 2 probability surface. Query input ${query.toFixed(2)} and theta ${theta.toPrecision(3)}.`}
           onPointerDown={(event) => {
             event.currentTarget.setPointerCapture(event.pointerId);
             setFromPointer(event.clientX, event.currentTarget);
@@ -234,6 +263,9 @@ function PosteriorChart() {
               <stop offset="0" stopColor="#c8f135" stopOpacity=".42" />
               <stop offset="1" stopColor="#c8f135" stopOpacity=".08" />
             </linearGradient>
+            <clipPath id="plotClip">
+              <rect x={chart.left} y={chart.top} width={chart.width} height={chart.height} />
+            </clipPath>
             <filter id="tooltipShadow" x="-20%" y="-20%" width="140%" height="150%">
               <feDropShadow dx="0" dy="8" stdDeviation="8" floodOpacity=".16" />
             </filter>
@@ -248,39 +280,44 @@ function PosteriorChart() {
               </g>
             );
           })}
-          {[0, 0.25, 0.5, 0.75, 1].map((tick) => {
-            const x = chart.left + tick * chart.width;
+          {[-2, -1, 0, 1, 2].map((tick) => {
+            const x = chart.left + ((tick + 2) / 4) * chart.width;
             return (
               <g key={tick}>
                 <line x1={x} x2={x} y1={chart.top} y2={chart.top + chart.height} className="grid-line" />
-                <text x={x} y="270" textAnchor="middle" className="axis-label">{tick.toFixed(2)}</text>
+                <text x={x} y="330" textAnchor="middle" className="axis-label">{tick}</text>
               </g>
             );
           })}
 
-          <path d={curve.band} className="posterior-band" />
-          <path d={curve.mean} className="posterior-path" />
+          <g clipPath="url(#plotClip)">
+            <path d={curve.band} className="posterior-band" />
+            <path d={curve.truth} className="truth-path" />
+            <path d={curve.mean} className="posterior-path" />
+          </g>
 
-          {current.xs.map((x, index) => {
-            const total = current.counts[index].reduce((sum, value) => sum + value, 0);
-            const proportion = current.counts[index][0] / total;
-            const weight = kernelWeight(query, x, theta);
+          {example2Data.map((observation, index) => {
+            const proportion = observation.successes / observation.trials;
+            const weight = kernelWeight(query, observation.x, theta);
+            const x = chart.left + ((observation.x + 2) / 4) * chart.width;
             return (
-            <g key={`${mode}-${index}`}>
+            <g key={index}>
               <rect
-                x={chart.left + x * chart.width - 3}
+                x={x - 2.5}
                 y={chart.weightTop + chart.weightHeight * (1 - weight)}
-                width="6"
+                width="5"
                 height={chart.weightHeight * weight}
-                rx="3"
+                rx="2.5"
                 className="weight-bar"
               />
-            <circle
-              cx={chart.left + x * chart.width}
-              cy={Math.min(chart.top + chart.height - 6, Math.max(chart.top + 6, chart.top + (1 - proportion) * chart.height))}
-              r={current.model === "BKP" && total === 1 ? 5.5 : Math.min(8, 4 + total / 10)}
-              className="observation"
-            />
+              <circle
+                cx={x}
+                cy={Math.min(chart.top + chart.height - 5, Math.max(chart.top + 5, chart.top + (1 - proportion) * chart.height))}
+                r={3.4 + Math.sqrt(observation.trials) / 2.8}
+                className="observation"
+              >
+                <title>{`x = ${observation.x.toFixed(3)} · y/m = ${observation.successes}/${observation.trials}`}</title>
+              </circle>
             </g>
           );})}
 
@@ -292,37 +329,47 @@ function PosteriorChart() {
 
           <g
             className="tooltip-card"
-            transform={`translate(${Math.min(queryX + 18, 458)}, ${Math.max(queryY - 42, 28)})`}
+            transform={`translate(${tooltipX}, ${tooltipY})`}
             filter="url(#tooltipShadow)"
           >
-            <rect width="205" height="96" rx="9" />
-            <text x="15" y="25" className="tooltip-value">x₀ = {query.toFixed(2)}</text>
-            <text x="15" y="48" className="tooltip-label">π̂(x₀) = {queryPosterior.mean.toFixed(3)}</text>
-            <text x="15" y="66" className="tooltip-label">95% CrI [{queryPosterior.low.toFixed(3)}, {queryPosterior.high.toFixed(3)}]</text>
-            <text x="15" y="84" className="tooltip-label">weighted trials = {queryPosterior.pseudoCount.toFixed(1)}</text>
+            <rect width="214" height="112" rx="11" />
+            <text x="16" y="27" className="tooltip-value">x₀ = {query.toFixed(2)}</text>
+            <text x="16" y="50" className="tooltip-label">BKP mean = {queryPosterior.mean.toFixed(3)}</text>
+            <text x="16" y="68" className="tooltip-label">True π₂(x₀) = {queryTruth.toFixed(3)}</text>
+            <text x="16" y="86" className="tooltip-label">95% CrI [{queryPosterior.low.toFixed(3)}, {queryPosterior.high.toFixed(3)}]</text>
+            <text x="16" y="103" className="tooltip-label">Weighted trials = {queryPosterior.weightedTrials.toFixed(1)}</text>
           </g>
-          <text x="18" y="136" textAnchor="middle" transform="rotate(-90 18 136)" className="axis-title">Probability</text>
-          <text x="360" y="341" textAnchor="middle" className="weight-label">Gaussian weights k(x₀, xᵢ)</text>
-          <text x="360" y="374" textAnchor="middle" className="axis-title">Input x</text>
+          <line x1={chart.left} x2={chart.left + chart.width} y1={chart.weightTop + chart.weightHeight} y2={chart.weightTop + chart.weightHeight} className="weight-baseline" />
+          <text x="18" y="180" textAnchor="middle" transform="rotate(-90 18 180)" className="axis-title">Probability</text>
+          <text x={chart.left} y="403" className="weight-label">k(x₀, xᵢ)</text>
+          <text x={chart.left + chart.width / 2} y="414" textAnchor="middle" className="axis-title">Input x</text>
         </svg>
       </div>
 
       <div className="chart-controls">
         <label className="query-control">
           <span>Query input x₀</span>
-          <input type="range" min="2" max="98" value={Math.round(query * 100)} onChange={(event) => setQuery(Number(event.target.value) / 100)} aria-label="BKP query input" />
+          <input type="range" min="-200" max="200" value={Math.round(query * 100)} onChange={(event) => setQuery(Number(event.target.value) / 100)} aria-label="BKP query input" />
           <output>{query.toFixed(2)}</output>
         </label>
-        <label className="query-control">
-          <span>Length scale θ</span>
-          <input type="range" min="8" max="38" value={Math.round(theta * 100)} onChange={(event) => setTheta(Number(event.target.value) / 100)} aria-label="Gaussian kernel length scale" />
-          <output>{theta.toFixed(2)}</output>
+        <label className="query-control gamma-control">
+          <span>Log length scale γ</span>
+          <input type="range" min="-300" max="300" value={Math.round(gamma * 100)} onChange={(event) => setGamma(Number(event.target.value) / 100)} aria-label="Log base ten Gaussian kernel length scale" />
+          <output>{gamma.toFixed(2)}</output>
         </label>
       </div>
-      <p className="chart-equation">
-        {current.model === "BKP"
-          ? "αₙ(x₀)=α₀+Σ k(x₀,xᵢ)yᵢ · βₙ(x₀)=β₀+Σ k(x₀,xᵢ)(mᵢ−yᵢ)"
-          : "DKP class-1 marginal · αₙⱼ(x₀)=α₀ⱼ+Σ k(x₀,xᵢ)yᵢⱼ"}
+      <div className="fit-summary">
+        <div>
+          <span>θ = 10<sup>γ</sup> = <b>{formatTheta(theta)}</b></span>
+          <span>LOOCV Brier = <b>{currentBrier.toFixed(5)}</b></span>
+        </div>
+        <button type="button" onClick={() => setGamma(example2Fit.gamma)} disabled={Math.abs(gamma - example2Fit.gamma) < 0.005}>
+          Use paper fit θ̂ = {example2Fit.theta.toFixed(4)}
+        </button>
+      </div>
+      <p className="range-note">
+        <span>Initial LHD Ω₀: γ ∈ [{example2Fit.initialGamma[0].toFixed(2)}, {example2Fit.initialGamma[1].toFixed(2)}] · θ ∈ [0.0447, 10]</span>
+        <span>Optimizer Ω: γ ∈ [{example2Fit.optimizerGamma[0]}, {example2Fit.optimizerGamma[1]}] · θ ∈ [0.001, 1000]</span>
       </p>
     </div>
   );
@@ -492,7 +539,7 @@ export default function Home() {
 
         <div className="hero-visual">
           <span className="formula-note" aria-hidden="true">
-            π(x) | 𝒟ₙ ~ Beta(αₙ(x), βₙ(x))<br />αₙ(x) = α₀(x) + Σ k(x,xᵢ)yᵢ<br />βₙ(x) = β₀(x) + Σ k(x,xᵢ)(mᵢ−yᵢ)
+            Paper · Example 2<br />π₂(x) = ½[1 + e⁻ˣ² cos(10 tanh(x/2))]<br />x ∈ [−2, 2] · n = 30
           </span>
           <PosteriorChart />
         </div>
