@@ -587,11 +587,12 @@ a:focus-visible { outline: 3px solid var(--lime); outline-offset: 3px; }
 .twin-plot-background { fill: #fff; stroke: #202126; stroke-width: 1.25; }
 .twin-plot-grid { stroke: #e1e2e5; stroke-width: 1; }
 .twin-plot-tick,
-.twin-plot-axis-title,
 .twin-test-label,
 .twin-plot-legend text { fill: #17191f; font-family: Arial, Helvetica, sans-serif; }
 .twin-plot-tick { font-size: 13px; }
-.twin-plot-axis-title { font-size: 17px; font-weight: 650; }
+.twin-axis-math { overflow: visible; }
+.twin-axis-math > div { display: grid; place-items: center; width: 100%; height: 100%; color: #17191f; font-size: 16px; }
+.twin-axis-math .katex { font-size: 1.06em; }
 .twin-true-curve { fill: none; stroke: #111317; stroke-width: 1.45; }
 .twin-training-point { fill: #111317; opacity: 0.78; }
 .twin-global-point { fill: #fff; stroke: #09a6e9; stroke-width: 2.7; }
@@ -809,8 +810,8 @@ footer > div { display: flex; gap: 26px; font-family: var(--font-geist-mono), mo
 footer a:hover { color: var(--blue); }
 
 @keyframes draw-curve {
-  from { opacity: 0; stroke-dasharray: 900; stroke-dashoffset: 900; }
-  to { opacity: 1; stroke-dasharray: 900; stroke-dashoffset: 0; }
+  from { opacity: 0; stroke-dasharray: 1; stroke-dashoffset: 1; }
+  to { opacity: 1; stroke-dasharray: 1; stroke-dashoffset: 0; }
 }
 @keyframes pop-in {
   from { opacity: 0; transform: translateY(7px); }

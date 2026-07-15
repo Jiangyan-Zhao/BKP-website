@@ -308,7 +308,7 @@ function PosteriorChart() {
           <g clipPath="url(#plotClip)">
             <path d={curve.band} className="posterior-band" />
             <path d={curve.truth} className="truth-path" />
-            <path d={curve.mean} className="posterior-path" />
+            <path d={curve.mean} className="posterior-path" pathLength="1" />
           </g>
 
           {example2Data.map((observation, index) => {
@@ -507,8 +507,14 @@ function TwinBkpExplorer() {
 
           <path className="twin-test-point" d={`M${xPosition(query) - 6},493 L${xPosition(query) + 6},505 M${xPosition(query) + 6},493 L${xPosition(query) - 6},505`} />
           <text className="twin-test-label" x={xPosition(query)} y="526" textAnchor="middle">x₀</text>
-          <text className="twin-plot-axis-title" x="496" y="548" textAnchor="middle">x</text>
-          <text className="twin-plot-axis-title" x="28" y="258" textAnchor="middle" transform="rotate(-90 28 258)">yᵢ / mᵢ</text>
+          <foreignObject className="twin-axis-math" x="456" y="532" width="80" height="28" aria-hidden="true">
+            <div><MathFormula>{"x"}</MathFormula></div>
+          </foreignObject>
+          <g transform="translate(28 258) rotate(-90)" aria-hidden="true">
+            <foreignObject className="twin-axis-math" x="-60" y="-18" width="120" height="36">
+              <div><MathFormula>{"y_i/m_i"}</MathFormula></div>
+            </foreignObject>
+          </g>
 
           <g className="twin-plot-legend" transform="translate(104 74)">
             <rect x="-15" y="-24" width="190" height="139" rx="7" />
