@@ -19,6 +19,7 @@ npm run preview
 ```
 
 The GitHub Actions workflow deploys `dist/` to GitHub Pages after every push to `main`.
+GitHub Pages uses the repository's **GitHub Actions** deployment source.
 
 Live site: <https://jiangyan-zhao.github.io/BKP-website/>
 
