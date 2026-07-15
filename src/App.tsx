@@ -375,6 +375,139 @@ function PosteriorChart() {
   );
 }
 
+const twinBkpGlobalIndices = [
+  6, 52, 79, 89, 124, 142, 155, 177, 190, 217, 232,
+  259, 274, 318, 337, 370, 381, 388, 395, 450, 478, 495,
+] as const;
+
+const twinBkpInputs = Array.from({ length: 500 }, (_, index) => -2 + ((index + 0.5) * 4) / 500);
+
+function TwinBkpExplorer() {
+  const [query, setQuery] = useState(0.15);
+  const globalSet = useMemo(() => new Set<number>(twinBkpGlobalIndices), []);
+  const localIndices = useMemo(
+    () => twinBkpInputs
+      .map((x, index) => ({ x, index, distance: Math.abs(x - query) }))
+      .filter(({ index }) => !globalSet.has(index))
+      .sort((left, right) => left.distance - right.distance)
+      .slice(0, 25)
+      .map(({ index }) => index),
+    [globalSet, query],
+  );
+  const localSet = useMemo(() => new Set(localIndices), [localIndices]);
+  const paperUrl = `${import.meta.env.BASE_URL}results/ex8.pdf`;
+  const xPosition = (x: number) => 62 + ((x + 2) / 4) * 696;
+  const supportLeft = xPosition(Math.max(-2, query - 0.218));
+  const supportRight = xPosition(Math.min(2, query + 0.218));
+
+  return (
+    <article className="twin-showcase" aria-labelledby="twin-title">
+      <header className="twin-heading">
+        <div>
+          <p className="section-kicker">Paper · Example 8</p>
+          <h3 id="twin-title">See TwinBKP split the work.</h3>
+        </div>
+        <p>
+          The global subset stays fixed; the local neighbourhood follows the query.
+          Together they form the 47-point update used for prediction.
+        </p>
+      </header>
+
+      <div className="twin-layout">
+        <div className="twin-interactive">
+          <div className="twin-metrics" aria-label="Paper settings">
+            <span><b>500</b> observations</span>
+            <span className="global"><b>22</b> global</span>
+            <span className="local"><b>25</b> local</span>
+            <span><b>47</b> in G ∪ L(x₀)</span>
+          </div>
+
+          <div className="twin-rug">
+            <svg viewBox="0 0 820 245" role="img" aria-label={`TwinBKP global and local subsets at x zero equals ${query.toFixed(2)}`}>
+              <rect className="twin-support" x={supportLeft} y="36" width={Math.max(0, supportRight - supportLeft)} height="163" rx="9" />
+              <text className="twin-row-label global" x="62" y="24">GLOBAL G · SHARED</text>
+              <text className="twin-row-label local" x="62" y="137">LOCAL L(x₀) · QUERY-SPECIFIC</text>
+
+              {twinBkpInputs.map((x, index) => (
+                <line
+                  key={`input-${index}`}
+                  className="twin-input"
+                  x1={xPosition(x)}
+                  x2={xPosition(x)}
+                  y1={86 + (index % 4) * 3}
+                  y2={96 + (index % 4) * 3}
+                />
+              ))}
+
+              {twinBkpGlobalIndices.map((index) => (
+                <circle key={`global-${index}`} className="twin-global-dot" cx={xPosition(twinBkpInputs[index])} cy="66" r="6" />
+              ))}
+
+              {twinBkpInputs.map((x, index) => localSet.has(index) && (
+                <circle key={`local-${index}`} className="twin-local-dot" cx={xPosition(x)} cy={163 + (index % 3) * 7} r="4.2" />
+              ))}
+
+              <line className="twin-query-line" x1={xPosition(query)} x2={xPosition(query)} y1="32" y2="202" />
+              <circle className="twin-query-dot" cx={xPosition(query)} cy="202" r="6.5" />
+              <line className="twin-axis-line" x1="62" x2="758" y1="202" y2="202" />
+              <text className="twin-axis-text" x="62" y="228" textAnchor="middle">−2</text>
+              <text className="twin-axis-text" x="410" y="228" textAnchor="middle">0</text>
+              <text className="twin-axis-text" x="758" y="228" textAnchor="middle">2</text>
+              <text className="twin-query-text" x={Math.min(730, Math.max(90, xPosition(query)))} y="48" textAnchor="middle">x₀</text>
+            </svg>
+          </div>
+
+          <label className="twin-slider">
+            <span>Move query x₀</span>
+            <input
+              type="range"
+              min="-2"
+              max="2"
+              step="0.01"
+              value={query}
+              onChange={(event) => setQuery(Number(event.target.value))}
+            />
+            <output>{query.toFixed(2)}</output>
+          </label>
+
+          <div className="twin-update" aria-label="TwinBKP two-stage posterior update">
+            <span><small>Global Gaussian</small>G · θ<sub>g</sub> = 0.05</span>
+            <i>→</i>
+            <strong>Beta(α<sub>G</sub>, β<sub>G</sub>)</strong>
+            <i>+</i>
+            <span><small>Local Wendland</small>L(x₀) · θ<sub>l</sub> = 0.0545</span>
+            <i>→</i>
+            <strong>Beta(α<sub>T</sub>, β<sub>T</sub>)</strong>
+          </div>
+          <p className="twin-note">
+            The rug is a paper-scale subset schematic. Counts, kernels, bandwidths, and domain match Example 8;
+            the fitted posterior at right is the original vector figure.
+          </p>
+        </div>
+
+        <aside className="twin-paper">
+          <div className="twin-paper-label">
+            <span>Original result</span>
+            <b>Nonlinear TwinBKP fit</b>
+          </div>
+          <object
+            className="twin-paper-figure"
+            data={`${paperUrl}#view=FitH&toolbar=0&navpanes=0`}
+            type="application/pdf"
+            aria-label="Original TwinBKP result from paper Example 8"
+          >
+            <a href={paperUrl} target="_blank" rel="noreferrer">Open the original PDF figure ↗</a>
+          </object>
+          <div className="twin-paper-links">
+            <a href={paperUrl} target="_blank" rel="noreferrer">Open original PDF ↗</a>
+            <a href="https://github.com/Jiangyan-Zhao/BKP-paper/blob/master/code/s4_ex8_twinbkp_1d_nonlinear.R" target="_blank" rel="noreferrer">Reproduce Example 8 ↗</a>
+          </div>
+        </aside>
+      </div>
+    </article>
+  );
+}
+
 type ExampleKey = "curve" | "surface" | "warbler";
 
 const examples: Record<
@@ -572,6 +705,7 @@ export default function Home() {
           <article><span>04</span><h3>TwinDKP</h3><p>Scalable global–local multiclass modeling.</p><code>fit_TwinDKP()</code></article>
         </div>
 
+        <TwinBkpExplorer />
         <ExampleExplorer />
       </section>
 
