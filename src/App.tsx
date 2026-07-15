@@ -704,6 +704,50 @@ function InstallPanel() {
   );
 }
 
+const bkpBibtex = `@Misc{Zhao2025BKP,
+  title  = {BKP: An R Package for Beta Kernel Process Modeling},
+  author = {Jiangyan Zhao and Kunhai Qing and Jin Xu},
+  year   = {2025},
+  note   = {arXiv:2508.10447},
+  url    = {https://arxiv.org/abs/2508.10447},
+  doi    = {10.48550/arXiv.2508.10447}
+}`;
+
+function CitationPanel() {
+  const [copied, setCopied] = useState(false);
+
+  async function copyBibtex() {
+    await navigator.clipboard.writeText(bkpBibtex);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1400);
+  }
+
+  return (
+    <article className="citation-panel" aria-labelledby="citation-title">
+      <div className="citation-intro">
+        <p className="section-kicker">Cite the project</p>
+        <h3 id="citation-title">Using BKP in your work?</h3>
+        <p>
+          Cite the package from R with <code>citation("BKP")</code>, or copy the
+          paper entry for your bibliography.
+        </p>
+        <a href="https://cran.r-project.org/web/packages/BKP/citation.html" target="_blank" rel="noreferrer">
+          View CRAN citation information ↗
+        </a>
+      </div>
+      <div className="citation-code">
+        <div>
+          <span>BibTeX · paper</span>
+          <button type="button" onClick={copyBibtex} aria-label="Copy BKP paper BibTeX">
+            {copied ? "Copied" : "Copy BibTeX"}
+          </button>
+        </div>
+        <pre><code>{bkpBibtex}</code></pre>
+      </div>
+    </article>
+  );
+}
+
 export default function Home() {
   const [activeSection, setActiveSection] = useState("overview");
 
@@ -873,15 +917,21 @@ export default function Home() {
             <b>Read the paper <i>↗</i></b>
           </a>
           <a className="resource-card blue" href="https://github.com/Jiangyan-Zhao/BKP" target="_blank" rel="noreferrer">
-            <span>GitHub</span><b>Source, issues & contributions</b><i>↗</i>
+            <span>GitHub</span>
+            <div className="resource-card-copy">
+              <b>Source, issues & contributions</b>
+              <small>If BKP supports your work, consider starring the repository.</small>
+            </div>
+            <i aria-hidden="true">★</i>
           </a>
-          <a className="resource-card lime" href="https://cran.r-project.org/package=BKP" target="_blank" rel="noreferrer">
-            <span>CRAN · 0.3.1</span><b>Stable package & manual</b><i>↗</i>
+          <a className="resource-card lime" href="https://cran.r-project.org/web/packages/BKP/BKP.html" target="_blank" rel="noreferrer">
+            <span>Documentation · 0.3.1</span><b>Function reference & package manual</b><i>↗</i>
           </a>
           <a className="resource-card coral" href="https://github.com/Jiangyan-Zhao/BKP-paper" target="_blank" rel="noreferrer">
             <span>Reproduce</span><b>Code, figures & manuscript</b><i>↗</i>
           </a>
         </aside>
+        <CitationPanel />
       </section>
 
       <footer>
