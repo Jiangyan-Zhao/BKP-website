@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jiangyan-zhao.github.io/BKP-website/sitemap.xml

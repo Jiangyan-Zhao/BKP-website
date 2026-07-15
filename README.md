@@ -24,3 +24,7 @@ GitHub Pages uses the repository's **GitHub Actions** deployment source.
 Live site: <https://jiangyan-zhao.github.io/BKP-website/>
 
 [![Deploy to GitHub Pages](https://github.com/Jiangyan-Zhao/BKP-website/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/Jiangyan-Zhao/BKP-website/actions/workflows/deploy-pages.yml)
+
+## License
+
+Copyright © 2026 Jiangyan Zhao. The BKP website source is licensed under the GNU General Public License version 3 or, at your option, any later version (GPL-3.0-or-later). See [LICENSE](LICENSE).

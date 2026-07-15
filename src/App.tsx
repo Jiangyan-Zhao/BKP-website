@@ -750,6 +750,7 @@ function CitationPanel() {
 
 export default function Home() {
   const [activeSection, setActiveSection] = useState("overview");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const sectionIds = ["overview", "install", "method", "examples", "resources"];
@@ -777,16 +778,30 @@ export default function Home() {
     };
   }, []);
 
+  useEffect(() => {
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMobileMenuOpen(false);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, []);
+
   return (
     <main>
       <header className="site-header">
         <a className="wordmark" href="#overview" aria-label="BKP home">BKP</a>
-        <nav aria-label="Primary navigation">
+        <nav
+          id="primary-navigation"
+          className={mobileMenuOpen ? "open" : ""}
+          aria-label="Primary navigation"
+          onClick={() => setMobileMenuOpen(false)}
+        >
           <a className={activeSection === "overview" ? "active" : ""} href="#overview">Overview</a>
           <a className={activeSection === "install" ? "active" : ""} href="#install">Install</a>
           <a className={activeSection === "method" ? "active" : ""} href="#method">Method</a>
           <a className={activeSection === "examples" ? "active" : ""} href="#examples">Examples</a>
           <a className={activeSection === "resources" ? "active" : ""} href="#resources">Resources</a>
+          <a className="mobile-nav-external" href="https://cran.r-project.org/package=BKP" target="_blank" rel="noreferrer">R package ↗</a>
         </nav>
         <div className="header-links">
           <a href="https://github.com/Jiangyan-Zhao/BKP" target="_blank" rel="noreferrer">
@@ -796,6 +811,16 @@ export default function Home() {
             <img className="r-project-logo" src="https://www.r-project.org/logo/Rlogo.svg" alt="" aria-hidden="true" /> R package
           </a>
         </div>
+        <button
+          className="menu-toggle"
+          type="button"
+          aria-expanded={mobileMenuOpen}
+          aria-controls="primary-navigation"
+          aria-label={mobileMenuOpen ? "Close navigation" : "Open navigation"}
+          onClick={() => setMobileMenuOpen((open) => !open)}
+        >
+          <i /><i /><i />
+        </button>
       </header>
 
       <section className="hero" id="overview">
@@ -938,7 +963,7 @@ export default function Home() {
         <a className="footer-mark" href="#overview">BKP</a>
         <p>Beta Kernel Process Modeling in R.</p>
         <div>
-          <span>GPL ≥ 3</span>
+          <span>BKP website · GPL ≥ 3</span>
           <a href="https://github.com/Jiangyan-Zhao/BKP/issues" target="_blank" rel="noreferrer">Report an issue ↗</a>
         </div>
       </footer>

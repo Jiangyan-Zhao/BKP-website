@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">BKP — Beta Kernel Process Modeling</title>
+  <desc id="desc">Closed-form inference directly on the probability scale.</desc>
+  <defs>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#1746d1" stroke-opacity=".07"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="#f7f5ee"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <rect x="0" y="0" width="24" height="630" fill="#1746d1"/>
+  <rect x="24" y="0" width="9" height="630" fill="#c8f135"/>
+  <text x="90" y="210" fill="#1746d1" font-family="Arial, Helvetica, sans-serif" font-size="170" font-weight="900" letter-spacing="-13">BKP</text>
+  <text x="96" y="286" fill="#10131a" font-family="Arial, Helvetica, sans-serif" font-size="48" font-weight="700">Beta Kernel Process Modeling</text>
+  <rect x="96" y="326" width="750" height="6" rx="3" fill="#1746d1"/>
+  <text x="96" y="394" fill="#5e6470" font-family="Arial, Helvetica, sans-serif" font-size="32">Closed-form inference, directly on the probability scale.</text>
+  <g font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700">
+    <rect x="96" y="446" width="212" height="52" rx="26" fill="#e8edff" stroke="#1746d1"/>
+    <text x="124" y="480" fill="#1746d1">BKP · DKP</text>
+    <rect x="324" y="446" width="278" height="52" rx="26" fill="#c8f135" stroke="#98ba19"/>
+    <text x="352" y="480" fill="#10131a">TwinBKP · TwinDKP</text>
+    <rect x="618" y="446" width="178" height="52" rx="26" fill="#ff604b" stroke="#d94735"/>
+    <text x="646" y="480" fill="#10131a">R package</text>
+  </g>
+  <text x="96" y="570" fill="#5e6470" font-family="Arial, Helvetica, sans-serif" font-size="22">CRAN 0.3.1 · github.com/Jiangyan-Zhao/BKP</text>
+</svg>
