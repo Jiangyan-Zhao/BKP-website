@@ -277,7 +277,7 @@ function PosteriorChart() {
               />
             <circle
               cx={chart.left + x * chart.width}
-              cy={chart.top + (1 - proportion) * chart.height}
+              cy={Math.min(chart.top + chart.height - 6, Math.max(chart.top + 6, chart.top + (1 - proportion) * chart.height))}
               r={current.model === "BKP" && total === 1 ? 5.5 : Math.min(8, 4 + total / 10)}
               className="observation"
             />
