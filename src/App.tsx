@@ -430,7 +430,7 @@ function makeTwinBkpObservations(): TwinBkpObservation[] {
 }
 
 const twinBkpObservations = makeTwinBkpObservations();
-const twinChart = { left: 84, top: 50, width: 824, height: 414 };
+const twinChart = { left: 84, top: 36, width: 824, height: 324 };
 
 function TwinBkpExplorer() {
   const [query, setQuery] = useState(0.15);
@@ -470,7 +470,7 @@ function TwinBkpExplorer() {
       </header>
 
       <figure className="twin-figure">
-        <svg viewBox="0 0 1000 560" role="img" aria-label={`TwinBKP global and local training points for query x zero equals ${query.toFixed(2)}`}>
+        <svg viewBox="0 0 1000 448" role="img" aria-label={`TwinBKP global and local training points for query x zero equals ${query.toFixed(2)}`}>
           <rect className="twin-plot-background" x={twinChart.left} y={twinChart.top} width={twinChart.width} height={twinChart.height} />
           {[0, 0.25, 0.5, 0.75, 1].map((tick) => (
             <g key={`y-${tick}`}>
@@ -508,11 +508,14 @@ function TwinBkpExplorer() {
             return <polygon key={`local-${index}`} className="twin-local-point" points={`${x},${y - 6.5} ${x + 6.5},${y} ${x},${y + 6.5} ${x - 6.5},${y}`} />;
           })}
 
-          <path className="twin-test-point" d={`M${xPosition(query) - 6},493 L${xPosition(query) + 6},505 M${xPosition(query) + 6},493 L${xPosition(query) - 6},505`} />
-          <foreignObject className="twin-axis-math" x="456" y="532" width="80" height="28" aria-hidden="true">
+          <foreignObject className="twin-axis-math" x="456" y={twinChart.top + twinChart.height + 29} width="80" height="28" aria-hidden="true">
             <div><MathFormula>{"x"}</MathFormula></div>
           </foreignObject>
-          <g transform="translate(28 258) rotate(-90)" aria-hidden="true">
+          <path
+            className="twin-test-point"
+            d={`M${xPosition(query) - 6},${twinChart.top + twinChart.height + 60} L${xPosition(query) + 6},${twinChart.top + twinChart.height + 72} M${xPosition(query) + 6},${twinChart.top + twinChart.height + 60} L${xPosition(query) - 6},${twinChart.top + twinChart.height + 72}`}
+          />
+          <g transform={`translate(28 ${twinChart.top + twinChart.height / 2}) rotate(-90)`} aria-hidden="true">
             <foreignObject className="twin-axis-math" x="-60" y="-18" width="120" height="36">
               <div><MathFormula>{"y_i/m_i"}</MathFormula></div>
             </foreignObject>
