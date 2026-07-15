@@ -1,6 +1,6 @@
 # BKP website
 
-Static React website for **Bayesian Kernel Projections (BKP)**. It includes an interactive posterior explorer, installation guidance, real results from the BKP paper, and links to the paper, GitHub repository, and CRAN.
+Static React website for **BKP: Beta Kernel Process Modeling**. It includes an interactive posterior explorer, installation guidance, real results from the BKP paper, and links to the paper, GitHub repository, and CRAN.
 
 ## Local development
 
