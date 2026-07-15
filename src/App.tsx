@@ -519,7 +519,11 @@ function TwinBkpExplorer() {
             <polygon className="twin-local-point" points="0,90 6,96 0,102 -6,96" /><text x="20" y="101">Local point · 25</text>
           </g>
         </svg>
-        <figcaption><b>Interactive Example 8.</b> The black points follow the paper&apos;s nonlinear binomial design; global points stay fixed while local points follow the testing location.</figcaption>
+        <figcaption>
+          <b>Interactive reconstruction.</b> This browser-generated illustration follows the settings of
+          Example 8 but is not the paper&apos;s exact R random sample. The exact fitted result is shown in the
+          original vector PDF alongside it.
+        </figcaption>
       </figure>
 
       <label className="twin-slider">
@@ -541,8 +545,8 @@ function TwinBkpExplorer() {
           <MathFormula display label="Prediction subset is the union of global and local subsets">
             {"\\mathcal I(x_0)=\\mathcal G\\cup\\mathcal L(x_0),\\qquad |\\mathcal G|=22,\\quad|\\mathcal L(x_0)|=25"}
           </MathFormula>
-          <MathFormula display label="TwinBKP posterior is a beta distribution">
-            {"\\pi(x_0)\\mid\\mathcal D_n\\sim\\operatorname{Beta}\\!\\left(\\alpha_T(x_0),\\beta_T(x_0)\\right)"}
+          <MathFormula display label="TwinBKP posterior conditional on the prediction subset is a beta distribution">
+            {"\\pi(x_0)\\mid\\mathcal D_{\\mathcal I(x_0)}\\sim\\operatorname{Beta}\\!\\left(\\alpha_T(x_0),\\beta_T(x_0)\\right)"}
           </MathFormula>
           <div className="twin-math-stages">
             <div>
@@ -817,7 +821,7 @@ export default function Home() {
         <a className="footer-mark" href="#overview">BKP</a>
         <p>Beta Kernel Process Modeling in R.</p>
         <div>
-          <span>GPL-3.0</span>
+          <span>GPL ≥ 3</span>
           <a href="https://github.com/Jiangyan-Zhao/BKP/issues" target="_blank" rel="noreferrer">Report an issue ↗</a>
         </div>
       </footer>
