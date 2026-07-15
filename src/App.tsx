@@ -224,8 +224,6 @@ function PosteriorChart() {
   const queryY = chart.top + (1 - queryPosterior.mean) * chart.height;
   const queryLowY = chart.top + (1 - queryPosterior.low) * chart.height;
   const queryHighY = chart.top + (1 - queryPosterior.high) * chart.height;
-  const tooltipX = queryX > 470 ? queryX - 232 : queryX + 18;
-  const tooltipY = Math.min(188, Math.max(60, queryY - 48));
 
   function setFromPointer(clientX: number, element: SVGSVGElement) {
     const rect = element.getBoundingClientRect();
@@ -247,13 +245,17 @@ function PosteriorChart() {
         <div className="paper-example-heading">
           <p><span>Paper · Example 2</span> Nonlinear binomial curve</p>
           <h3>Explore the fitted BKP probability surface</h3>
-          <small>n = 30 · x ∈ [−2, 2] · noninformative Beta(1, 1) prior</small>
+          <small>
+            <MathFormula>{"n=30"}</MathFormula><i>·</i>
+            <MathFormula>{"x\\in[-2,2]"}</MathFormula><i>·</i>
+            noninformative <MathFormula>{"\\operatorname{Beta}(1,1)"}</MathFormula> prior
+          </small>
         </div>
         <div className="legend" aria-hidden="true">
           <span><i className="legend-line" />Posterior mean</span>
-          <span><i className="legend-truth" />True π₂(x)</span>
+          <span><i className="legend-truth" />True <MathFormula>{"\\pi_2(x)"}</MathFormula></span>
           <span><i className="legend-band" />95% pointwise CrI</span>
-          <span><i className="legend-dot" />Observed yᵢ/mᵢ</span>
+          <span><i className="legend-dot" />Observed <MathFormula>{"y_i/m_i"}</MathFormula></span>
         </div>
       </div>
 
@@ -281,9 +283,6 @@ function PosteriorChart() {
             <clipPath id="plotClip">
               <rect x={chart.left} y={chart.top} width={chart.width} height={chart.height} />
             </clipPath>
-            <filter id="tooltipShadow" x="-20%" y="-20%" width="140%" height="150%">
-              <feDropShadow dx="0" dy="8" stdDeviation="8" floodOpacity=".16" />
-            </filter>
           </defs>
 
           {[0, 0.25, 0.5, 0.75, 1].map((tick) => {
@@ -342,49 +341,53 @@ function PosteriorChart() {
           <line x1={queryX - 7} x2={queryX + 7} y1={queryLowY} y2={queryLowY} className="interval-line" />
           <circle cx={queryX} cy={queryY} r="8" className="query-point" />
 
-          <g
-            className="tooltip-card"
-            transform={`translate(${tooltipX}, ${tooltipY})`}
-            filter="url(#tooltipShadow)"
-          >
-            <rect width="214" height="112" rx="11" />
-            <text x="16" y="27" className="tooltip-value">x₀ = {query.toFixed(2)}</text>
-            <text x="16" y="50" className="tooltip-label">BKP mean = {queryPosterior.mean.toFixed(3)}</text>
-            <text x="16" y="68" className="tooltip-label">True π₂(x₀) = {queryTruth.toFixed(3)}</text>
-            <text x="16" y="86" className="tooltip-label">95% CrI [{queryPosterior.low.toFixed(3)}, {queryPosterior.high.toFixed(3)}]</text>
-            <text x="16" y="103" className="tooltip-label">Weighted trials = {queryPosterior.weightedTrials.toFixed(1)}</text>
-          </g>
           <line x1={chart.left} x2={chart.left + chart.width} y1={chart.weightTop + chart.weightHeight} y2={chart.weightTop + chart.weightHeight} className="weight-baseline" />
-          <text x="18" y="180" textAnchor="middle" transform="rotate(-90 18 180)" className="axis-title">Probability</text>
-          <text x={chart.left} y="403" className="weight-label">k(x₀, xᵢ)</text>
-          <text x={chart.left + chart.width / 2} y="414" textAnchor="middle" className="axis-title">Input x</text>
+          <g transform="translate(19 180) rotate(-90)" aria-hidden="true">
+            <foreignObject className="chart-axis-math" x="-48" y="-17" width="96" height="34">
+              <div><MathFormula>{"\\pi_2(x)"}</MathFormula></div>
+            </foreignObject>
+          </g>
+          <foreignObject className="chart-axis-math weight-axis-math" x={chart.left} y="388" width="104" height="28" aria-hidden="true">
+            <div><MathFormula>{"k(x_0,x_i)"}</MathFormula></div>
+          </foreignObject>
+          <foreignObject className="chart-axis-math" x={chart.left + chart.width / 2 - 40} y="394" width="80" height="28" aria-hidden="true">
+            <div><MathFormula>{"x"}</MathFormula></div>
+          </foreignObject>
         </svg>
+      </div>
+
+      <div className="query-readout" aria-label="Current BKP query summary">
+        <span><small><MathFormula>{"x_0"}</MathFormula></small><b>{query.toFixed(2)}</b></span>
+        <span><small>BKP mean <MathFormula>{"\\widehat{\\pi}(x_0)"}</MathFormula></small><b>{queryPosterior.mean.toFixed(3)}</b></span>
+        <span><small>True <MathFormula>{"\\pi_2(x_0)"}</MathFormula></small><b>{queryTruth.toFixed(3)}</b></span>
+        <span><small>95% CrI</small><b>[{queryPosterior.low.toFixed(3)}, {queryPosterior.high.toFixed(3)}]</b></span>
+        <span><small>Weighted trials</small><b>{queryPosterior.weightedTrials.toFixed(1)}</b></span>
       </div>
 
       <div className="chart-controls">
         <label className="query-control">
-          <span>Query input x₀</span>
+          <span>Query input <MathFormula>{"x_0"}</MathFormula></span>
           <input type="range" min="-200" max="200" value={Math.round(query * 100)} onChange={(event) => setQuery(Number(event.target.value) / 100)} aria-label="BKP query input" />
           <output>{query.toFixed(2)}</output>
         </label>
         <label className="query-control gamma-control">
-          <span>Log length scale γ</span>
+          <span>Log length scale <MathFormula>{"\\gamma"}</MathFormula></span>
           <input type="range" min="-300" max="300" value={Math.round(gamma * 100)} onChange={(event) => setGamma(Number(event.target.value) / 100)} aria-label="Log base ten Gaussian kernel length scale" />
           <output>{gamma.toFixed(2)}</output>
         </label>
       </div>
       <div className="fit-summary">
         <div>
-          <span>θ = 10<sup>γ</sup> = <b>{formatTheta(theta)}</b></span>
+          <span><MathFormula>{"\\theta=10^\\gamma"}</MathFormula> = <b>{formatTheta(theta)}</b></span>
           <span>LOOCV Brier = <b>{currentBrier.toFixed(5)}</b></span>
         </div>
         <button type="button" onClick={() => setGamma(example2Fit.gamma)} disabled={Math.abs(gamma - example2Fit.gamma) < 0.005}>
-          Use paper fit θ̂ = {example2Fit.theta.toFixed(4)}
+          Use paper fit <MathFormula>{"\\widehat{\\theta}"}</MathFormula> = {example2Fit.theta.toFixed(4)}
         </button>
       </div>
       <p className="range-note">
-        <span>Initial LHD Ω₀: γ ∈ [{example2Fit.initialGamma[0].toFixed(2)}, {example2Fit.initialGamma[1].toFixed(2)}] · θ ∈ [0.0447, 10]</span>
-        <span>Optimizer Ω: γ ∈ [{example2Fit.optimizerGamma[0]}, {example2Fit.optimizerGamma[1]}] · θ ∈ [0.001, 1000]</span>
+        <span>Initial LHD <MathFormula>{"\\Omega_0"}</MathFormula>: <MathFormula>{`\\gamma\\in[${example2Fit.initialGamma[0].toFixed(2)},${example2Fit.initialGamma[1].toFixed(2)}]`}</MathFormula> · <MathFormula>{"\\theta\\in[0.0447,10]"}</MathFormula></span>
+        <span>Optimizer <MathFormula>{"\\Omega"}</MathFormula>: <MathFormula>{`\\gamma\\in[${example2Fit.optimizerGamma[0]},${example2Fit.optimizerGamma[1]}]`}</MathFormula> · <MathFormula>{"\\theta\\in[0.001,1000]"}</MathFormula></span>
       </p>
     </div>
   );
