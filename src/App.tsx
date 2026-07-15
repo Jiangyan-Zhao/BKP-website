@@ -458,11 +458,11 @@ function TwinBkpExplorer() {
       <header className="twin-heading">
         <div>
           <p className="section-kicker">Paper · Example 8</p>
-          <h3 id="twin-title">How TwinBKP chooses global and local points.</h3>
+          <h3 id="twin-title">Global coverage, local refinement.</h3>
         </div>
         <p>
-          Inspired by the TwinGP illustration: blue circles are shared global points,
-          green diamonds are the query-specific local neighbours.
+          Blue circles represent the shared global subset; green diamonds follow the
+          testing location as its query-specific nearest neighbours.
         </p>
       </header>
 
@@ -546,7 +546,7 @@ function TwinBkpExplorer() {
 
       <div className="twin-lower">
         <section className="twin-math-panel" aria-labelledby="twin-math-title">
-          <p className="section-kicker" id="twin-math-title">Local–global posterior</p>
+          <p className="section-kicker" id="twin-math-title">Local–global posterior update</p>
           <MathFormula display label="Prediction subset is the union of global and local subsets">
             {"\\mathcal I(x_0)=\\mathcal G\\cup\\mathcal L(x_0),\\qquad |\\mathcal G|=22,\\quad|\\mathcal L(x_0)|=25"}
           </MathFormula>
@@ -605,7 +605,7 @@ const examples: Record<
 > = {
   curve: {
     title: "Nonlinear BKP posterior",
-    description: "Example 2 shows the fitted posterior mean, pointwise 95% credible interval, observed proportions, and the true nonlinear probability function.",
+    description: "The original Example 2 figure compares the fitted posterior mean and pointwise 95% credible interval with observed proportions and the true nonlinear probability function.",
     tag: "BKP · Example 2",
     figure: "/results/ex2.pdf",
     alt: "BKP posterior mean and 95 percent credible interval for the nonlinear binomial example",
@@ -614,7 +614,7 @@ const examples: Record<
   },
   surface: {
     title: "Iris multiclass classification",
-    description: "Example 7 visualizes DKP classification regions and the maximum predicted class probability, revealing where class assignments are less decisive.",
+    description: "The original Example 7 figure shows the DKP classification regions and maximum predicted class probability, making uncertain decision boundaries visible.",
     tag: "DKP · Example 7",
     figure: "/results/ex7.pdf",
     alt: "DKP predicted classes and maximum predicted probability for the Iris data",
@@ -623,7 +623,7 @@ const examples: Record<
   },
   warbler: {
     title: "Mourning Warbler distribution",
-    description: "The real-data application maps training presences, training absences, and spatially withheld test observations across North America.",
+    description: "This real-data figure maps training presences, training absences, and spatially withheld test observations across North America.",
     tag: "BKP · Real data",
     figure: "/results/mourning-warbler-distribution.pdf",
     alt: "Map of Mourning Warbler training presences, training absences, and withheld test locations",
@@ -735,8 +735,9 @@ export default function Home() {
           <h1>BKP</h1>
           <h2>Closed-form inference,<br />directly on the probability scale.</h2>
           <p className="hero-description">
-            Model binary, binomial, categorical, and multinomial outcomes with
-            localized kernels and conjugate Beta or Dirichlet updates.
+            Fit covariate-dependent binary, binomial, categorical, and multinomial
+            probabilities with localized kernels and conjugate Beta or Dirichlet updates—
+            without a latent Gaussian layer or MCMC.
           </p>
           <div className="hero-actions">
             <a className="button primary" href="#install">Get started <span>→</span></a>
@@ -767,9 +768,9 @@ export default function Home() {
           <h2 id="method-title">Method in a nutshell</h2>
         </div>
         <ol>
-          <li><span>1</span><p>Choose a Beta or Dirichlet prior at each input.</p></li>
-          <li><span>2</span><p>Borrow nearby information with kernel weights.</p></li>
-          <li><span>3</span><p>Obtain a closed-form posterior and credible interval.</p></li>
+          <li><span>1</span><p>Place a Beta or Dirichlet prior directly on the response probability.</p></li>
+          <li><span>2</span><p>Borrow evidence through localized, kernel-weighted pseudo-counts.</p></li>
+          <li><span>3</span><p>Return closed-form posterior summaries, predictions, and uncertainty.</p></li>
         </ol>
         <div className="mini-density" aria-hidden="true">⌁</div>
       </section>
@@ -778,17 +779,28 @@ export default function Home() {
         <div className="section-intro">
           <p className="section-kicker">One grammar, four paths</p>
           <h2 id="examples-title">Pick the model that matches the outcome.</h2>
-          <p>BKP keeps the workflow familiar while changing the response model and computational strategy.</p>
+          <p>Choose BKP or DKP by response type, then use a Twin variant when the data call for a scalable global–local approximation.</p>
         </div>
 
         <div className="model-grid">
-          <article><span>01</span><h3>BKP</h3><p>Binary or aggregated binomial responses.</p><code>fit_BKP()</code></article>
-          <article><span>02</span><h3>DKP</h3><p>Categorical or multinomial responses.</p><code>fit_DKP()</code></article>
-          <article><span>03</span><h3>TwinBKP</h3><p>Scalable global–local binomial modeling.</p><code>fit_TwinBKP()</code></article>
-          <article><span>04</span><h3>TwinDKP</h3><p>Scalable global–local multiclass modeling.</p><code>fit_TwinDKP()</code></article>
+          <article><span>01</span><h3>BKP</h3><p>Full modeling for binary or aggregated binomial responses.</p><code>fit_BKP()</code></article>
+          <article><span>02</span><h3>DKP</h3><p>Full modeling for categorical or multinomial responses.</p><code>fit_DKP()</code></article>
+          <article><span>03</span><h3>TwinBKP</h3><p>A global–local approximation for larger binomial datasets.</p><code>fit_TwinBKP()</code></article>
+          <article><span>04</span><h3>TwinDKP</h3><p>A global–local approximation for larger multiclass datasets.</p><code>fit_TwinDKP()</code></article>
         </div>
 
         <TwinBkpExplorer />
+
+        <div className="results-intro">
+          <div>
+            <p className="section-kicker">Original paper results</p>
+            <h3>Inspect the evidence. Reproduce every figure.</h3>
+          </div>
+          <p>
+            Each panel embeds the original vector PDF from BKP-paper. Open a figure at
+            full resolution or follow its R script to reproduce the published result.
+          </p>
+        </div>
         <ExampleExplorer />
       </section>
 
@@ -797,8 +809,8 @@ export default function Home() {
           <p className="section-kicker">Start in R</p>
           <h2 id="install-title">From data to posterior in a few lines.</h2>
           <p>
-            The stable release is available on CRAN. Fit the model, predict at new inputs,
-            and visualize posterior summaries through familiar S3 methods.
+            Install the stable CRAN release, then fit, predict, simulate, and visualize
+            posterior summaries through a consistent set of S3 methods.
           </p>
           <InstallPanel />
         </div>
