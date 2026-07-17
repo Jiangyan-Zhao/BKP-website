@@ -472,7 +472,7 @@ function TwinBkpExplorer() {
       </header>
 
       <figure className="twin-figure">
-        <svg viewBox="0 0 1160 448" role="img" aria-label={`TwinBKP global and local training points for query x zero equals ${query.toFixed(2)}`}>
+        <svg viewBox="0 0 1160 420" role="img" aria-label={`TwinBKP global and local training points for query x zero equals ${query.toFixed(2)}`}>
           <rect className="twin-plot-background" x={twinChart.left} y={twinChart.top} width={twinChart.width} height={twinChart.height} />
           {[0, 0.25, 0.5, 0.75, 1].map((tick) => (
             <g key={`y-${tick}`}>
@@ -513,10 +513,6 @@ function TwinBkpExplorer() {
           <foreignObject className="twin-axis-math" x="456" y={twinChart.top + twinChart.height + 29} width="80" height="28" aria-hidden="true">
             <div><MathFormula>{"x"}</MathFormula></div>
           </foreignObject>
-          <path
-            className="twin-test-point"
-            d={`M${xPosition(query) - 6},${twinChart.top + twinChart.height + 60} L${xPosition(query) + 6},${twinChart.top + twinChart.height + 72} M${xPosition(query) + 6},${twinChart.top + twinChart.height + 60} L${xPosition(query) - 6},${twinChart.top + twinChart.height + 72}`}
-          />
           <g transform={`translate(28 ${twinChart.top + twinChart.height / 2}) rotate(-90)`} aria-hidden="true">
             <foreignObject className="twin-axis-math" x="-60" y="-18" width="120" height="36">
               <div><MathFormula>{"y_i/m_i"}</MathFormula></div>
@@ -532,25 +528,26 @@ function TwinBkpExplorer() {
             <polygon className="twin-local-point" points="0,90 6,96 0,102 -6,96" /><text x="20" y="101">Local point · 25</text>
           </g>
         </svg>
+        <div className="twin-slider-row">
+          <label className="twin-slider">
+            <span>Move testing location <MathFormula>{"x_0"}</MathFormula></span>
+            <input
+              type="range"
+              min="-2"
+              max="2"
+              step="0.01"
+              value={query}
+              onChange={(event) => setQuery(Number(event.target.value))}
+            />
+            <output>{query.toFixed(2)}</output>
+          </label>
+        </div>
         <figcaption>
           <b>Interactive reconstruction.</b> This browser-generated illustration follows the settings of
           Example 8 but is not the paper&apos;s exact R random sample. The exact fitted result is shown in the
           original vector PDF alongside it.
         </figcaption>
       </figure>
-
-      <label className="twin-slider">
-        <span>Move testing location <MathFormula>{"x_0"}</MathFormula></span>
-        <input
-          type="range"
-          min="-2"
-          max="2"
-          step="0.01"
-          value={query}
-          onChange={(event) => setQuery(Number(event.target.value))}
-        />
-        <output>{query.toFixed(2)}</output>
-      </label>
 
       <div className="twin-lower">
         <section className="twin-math-panel" aria-labelledby="twin-math-title">
