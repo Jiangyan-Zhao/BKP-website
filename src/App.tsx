@@ -754,17 +754,17 @@ export default function Home() {
     let timer = 0;
 
     const getRequestedSection = () => {
-      const querySection = new URLSearchParams(window.location.search).get("section");
-      if (querySection) return querySection;
-
       const rawHash = window.location.hash.slice(1);
-      if (!rawHash) return "";
 
-      try {
-        return decodeURIComponent(rawHash);
-      } catch {
-        return rawHash;
+      if (rawHash) {
+        try {
+          return decodeURIComponent(rawHash);
+        } catch {
+          return rawHash;
+        }
       }
+
+      return new URLSearchParams(window.location.search).get("section") ?? "";
     };
 
     const scrollToRequestedSection = (behavior: ScrollBehavior) => {
