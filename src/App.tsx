@@ -754,33 +754,52 @@ export default function Home() {
 
   useEffect(() => {
     let frame = 0;
+    let timer = 0;
 
-    const scrollToCurrentHash = (behavior: ScrollBehavior) => {
+    const getRequestedSection = () => {
+      const querySection = new URLSearchParams(window.location.search).get("section");
+      if (querySection) return querySection;
+
       const rawHash = window.location.hash.slice(1);
-      if (!rawHash) return;
+      if (!rawHash) return "";
 
-      let sectionId = rawHash;
       try {
-        sectionId = decodeURIComponent(rawHash);
+        return decodeURIComponent(rawHash);
       } catch {
-        // Keep the raw hash if it contains malformed escape sequences.
+        return rawHash;
       }
+    };
+
+    const scrollToRequestedSection = (behavior: ScrollBehavior) => {
+      const sectionId = getRequestedSection();
+      if (!sectionId) return;
 
       const section = document.getElementById(sectionId);
       if (!section) return;
 
       window.cancelAnimationFrame(frame);
       frame = window.requestAnimationFrame(() => {
-        section.scrollIntoView({ behavior, block: "start" });
+        section.scrollIntoView({
+          behavior,
+          block: "start",
+        });
       });
     };
 
-    scrollToCurrentHash("auto");
-    const handleHashChange = () => scrollToCurrentHash("smooth");
+    // Run after React has rendered the page.
+    scrollToRequestedSection("auto");
+
+    // Repeat after fonts, figures, and other layout-dependent content settle.
+    timer = window.setTimeout(() => {
+      scrollToRequestedSection("auto");
+    }, 300);
+
+    const handleHashChange = () => scrollToRequestedSection("smooth");
     window.addEventListener("hashchange", handleHashChange);
 
     return () => {
       window.cancelAnimationFrame(frame);
+      window.clearTimeout(timer);
       window.removeEventListener("hashchange", handleHashChange);
     };
   }, []);
