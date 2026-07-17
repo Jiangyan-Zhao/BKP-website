@@ -672,21 +672,41 @@ a:focus-visible { outline: 3px solid var(--lime); outline-offset: 3px; }
 .twin-plot-legend rect { fill: rgba(255, 255, 255, 0.95); stroke: #d8dade; stroke-width: 0.8; }
 .twin-plot-legend text { font-size: 14px; }
 .twin-plot-legend .legend-point { opacity: 1; }
-.twin-slider {
+.twin-slider-row {
   display: grid;
-  grid-template-columns: auto 1fr 58px;
-  gap: 16px;
+  grid-template-columns: 84fr 824fr 252fr;
+  width: min(100%, 1260px);
+  margin: -2px auto 18px;
+}
+.twin-slider {
+  grid-column: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 7px 14px;
   align-items: center;
-  margin: 0 44px 34px;
-  padding: 14px 16px;
-  border: 1px solid #cfd1d6;
-  background: #f7f8fa;
+  margin: 0;
   font-family: var(--font-geist-mono), monospace;
   font-size: 0.78rem;
   font-weight: 700;
 }
-.twin-slider input { width: 100%; accent-color: var(--blue); cursor: pointer; }
-.twin-slider output { padding: 6px 7px; border: 1px solid var(--ink); border-radius: 5px; color: var(--blue); text-align: center; }
+.twin-slider input {
+  grid-row: 1;
+  grid-column: 1 / -1;
+  width: 100%;
+  margin: 0;
+  accent-color: var(--blue);
+  cursor: pointer;
+}
+.twin-slider span { grid-row: 2; grid-column: 1; }
+.twin-slider output {
+  grid-row: 2;
+  grid-column: 2;
+  padding: 5px 7px;
+  border: 1px solid var(--ink);
+  border-radius: 5px;
+  color: var(--blue);
+  text-align: center;
+}
 .twin-lower { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(330px, 0.72fr); border-top: 1px solid #c7c9ce; }
 .twin-math-panel { min-width: 0; padding: 36px 42px 34px; background: #f6f8fc; }
 .twin-math-panel > .section-kicker { font-size: 0.68rem; letter-spacing: 0.1em; }
@@ -1099,7 +1119,7 @@ footer a:hover { color: var(--blue); }
   .query-readout > span:last-child { grid-column: 1 / -1; border-bottom: 0; }
   .results-intro { grid-template-columns: 1fr; gap: 16px; }
   .twin-figure { padding: 22px 18px 14px; }
-  .twin-slider { margin: 0 18px 26px; }
+  .twin-slider-row { margin-bottom: 14px; }
   .twin-math-panel { padding: 30px 22px 28px; }
   .twin-math-stages { grid-template-columns: 1fr; }
   .example-display { grid-template-columns: 1fr; }
@@ -1145,9 +1165,7 @@ footer a:hover { color: var(--blue); }
   .twin-heading { padding: 26px 20px 22px; }
   .twin-figure { padding: 14px 7px 12px; }
   .twin-figure figcaption { margin-inline: 8px; }
-  .twin-slider { grid-template-columns: 1fr 54px; }
-  .twin-slider span { grid-column: 1 / -1; }
-  .twin-slider { margin: 0 12px 22px; }
+  .twin-slider-row { margin-bottom: 12px; }
   .twin-math-panel { padding: 25px 16px; }
   .twin-parameters { display: grid; }
   .twin-paper { padding: 18px; }
