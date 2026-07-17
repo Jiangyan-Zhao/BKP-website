@@ -753,6 +753,39 @@ export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
+    let frame = 0;
+
+    const scrollToCurrentHash = (behavior: ScrollBehavior) => {
+      const rawHash = window.location.hash.slice(1);
+      if (!rawHash) return;
+
+      let sectionId = rawHash;
+      try {
+        sectionId = decodeURIComponent(rawHash);
+      } catch {
+        // Keep the raw hash if it contains malformed escape sequences.
+      }
+
+      const section = document.getElementById(sectionId);
+      if (!section) return;
+
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(() => {
+        section.scrollIntoView({ behavior, block: "start" });
+      });
+    };
+
+    scrollToCurrentHash("auto");
+    const handleHashChange = () => scrollToCurrentHash("smooth");
+    window.addEventListener("hashchange", handleHashChange);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("hashchange", handleHashChange);
+    };
+  }, []);
+
+  useEffect(() => {
     const sectionIds = ["overview", "install", "method", "examples", "resources"];
     let frame = 0;
     const updateActiveSection = () => {
