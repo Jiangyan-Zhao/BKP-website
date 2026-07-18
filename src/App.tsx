@@ -1058,18 +1058,6 @@ export default function Home() {
               <a href="https://github.com/Jiangyan-Zhao/BKP-paper/blob/master/paper/TR_BKP.pdf" target="_blank" rel="noreferrer"><b>Latest manuscript PDF</b><i>↗</i></a>
             </div>
           </article>
-          <article className="research-card">
-            <div className="research-card-copy">
-              <span>BKP-based follow-up research</span>
-              <b>Shared Keyboard (SKBD)</b>
-              <small>An improved Bayesian Phase I design built on BKP.</small>
-            </div>
-            <div className="research-card-links" aria-label="SKBD research links">
-              <a href="https://arxiv.org/abs/2605.25043" target="_blank" rel="noreferrer">arXiv ↗</a>
-              <a href="https://github.com/Jiangyan-Zhao/SKBD" target="_blank" rel="noreferrer">SKBD ↗</a>
-              <a href="https://github.com/Jiangyan-Zhao/SKBD-paper" target="_blank" rel="noreferrer">SKBD-paper ↗</a>
-            </div>
-          </article>
           <a className="resource-card blue" href="https://github.com/Jiangyan-Zhao/BKP" target="_blank" rel="noreferrer">
             <span>GitHub</span>
             <div className="resource-card-copy">
@@ -1088,6 +1076,34 @@ export default function Home() {
             <span>Slides · PDF</span><b>Presentation deck</b><i>↗</i>
           </a>
         </aside>
+
+        <article className="followup-research-card" aria-labelledby="skbd-title">
+          <div className="followup-research-copy">
+            <span className="followup-research-kicker">BKP-based follow-up research</span>
+            <h3 id="skbd-title">Shared Keyboard: An Improved Bayesian Design for Phase I Clinical Trials via Beta Kernel Process</h3>
+            <p>
+              SKBD applies BKP to Phase I dose-finding, borrowing information across neighboring
+              dose levels to guide escalation and de-escalation while retaining interpretable
+              toxicity estimates.
+            </p>
+            <div className="followup-research-meta" aria-label="SKBD research scope">
+              <span><b>Application</b> Phase I dose-finding</span>
+              <span><b>Foundation</b> Beta kernel process</span>
+            </div>
+          </div>
+          <div className="followup-research-links" aria-label="SKBD research links">
+            <a href="https://arxiv.org/abs/2605.25043" target="_blank" rel="noreferrer">
+              <span>Paper</span><b>arXiv:2605.25043</b><i aria-hidden="true">↗</i>
+            </a>
+            <a href="https://github.com/Jiangyan-Zhao/SKBD" target="_blank" rel="noreferrer">
+              <span>Method code</span><b>Jiangyan-Zhao/SKBD</b><i aria-hidden="true">↗</i>
+            </a>
+            <a href="https://github.com/Jiangyan-Zhao/SKBD-paper" target="_blank" rel="noreferrer">
+              <span>Reproduce</span><b>Jiangyan-Zhao/SKBD-paper</b><i aria-hidden="true">↗</i>
+            </a>
+          </div>
+        </article>
+
         <CitationPanel />
       </section>
 
