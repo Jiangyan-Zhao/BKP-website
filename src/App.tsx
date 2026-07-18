@@ -706,9 +706,26 @@ function InstallPanel() {
   const [source, setSource] = useState<"CRAN" | "GitHub">("CRAN");
   const [copied, setCopied] = useState(false);
   const command = source === "CRAN" ? 'install.packages("BKP")' : 'pak::pak("Jiangyan-Zhao/BKP")';
+  const quickStartComment = "# complete reproducible example";
+  const quickStartBody = `library(BKP)
+set.seed(123)
+X <- matrix(seq(-2, 2, length.out = 30), ncol = 1)
+m <- rep(50, nrow(X))
+prob <- plogis(2 * X[, 1])
+y <- rbinom(nrow(X), size = m, prob = prob)
+bounds <- matrix(c(-2, 2), nrow = 1)
+fit <- fit_BKP(X, y, m, Xbounds = bounds)
+Xnew <- matrix(seq(-2, 2, length.out = 100), ncol = 1)
+pred <- predict(fit, Xnew = Xnew)
+head(pred)
+plot(fit, engine = "ggplot")`;
+  const completeExample = `${command}
 
-  async function copyCommand() {
-    await navigator.clipboard.writeText(command);
+${quickStartComment}
+${quickStartBody}`;
+
+  async function copyExample() {
+    await navigator.clipboard.writeText(completeExample);
     setCopied(true);
     window.setTimeout(() => setCopied(false), 1400);
   }
@@ -726,9 +743,9 @@ function InstallPanel() {
       </div>
       <div className="install-command">
         <code><span>&gt;</span> {command}</code>
-        <button onClick={copyCommand} aria-label="Copy installation command">{copied ? "Copied" : "Copy"}</button>
+        <button onClick={copyExample} aria-label="Copy complete R example">{copied ? "Copied" : "Copy all"}</button>
       </div>
-      <pre aria-label="Complete reproducible BKP quick start"><code><span># complete reproducible example</span>{`\nlibrary(BKP)\nset.seed(123)\nX <- matrix(seq(-2, 2, length.out = 30), ncol = 1)\nm <- rep(50, nrow(X))\nprob <- plogis(2 * X[, 1])\ny <- rbinom(nrow(X), size = m, prob = prob)\nbounds <- matrix(c(-2, 2), nrow = 1)\nfit <- fit_BKP(X, y, m, Xbounds = bounds)\nXnew <- matrix(seq(-2, 2, length.out = 100), ncol = 1)\npred <- predict(fit, Xnew = Xnew)\nhead(pred)\nplot(fit, engine = "ggplot")`}</code></pre>
+      <pre aria-label="Complete reproducible BKP quick start"><code><span>{quickStartComment}</span>{`\n${quickStartBody}`}</code></pre>
     </div>
   );
 }
