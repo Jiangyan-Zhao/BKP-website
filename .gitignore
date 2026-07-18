@@ -7,3 +7,4 @@ dist-offline/
 vite.config.js
 vite.config.d.ts
 .Rproj.user
+.Rhistory
