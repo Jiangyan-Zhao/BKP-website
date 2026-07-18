@@ -1,59 +1,50 @@
 # BKP: Beta Kernel Process Modeling Website
 
-[![Deploy to GitHub Pages](https://github.com/Jiangyan-Zhao/BKP-website/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/Jiangyan-Zhao/BKP-website/actions/workflows/deploy-pages.yml)
-[![CRAN status](https://www.r-pkg.org/badges/version/BKP)](https://cran.r-project.org/web/packages/BKP/BKP.html)
+[![Deploy to GitHub Pages](https://github.com/Jiangyan-Zhao/BKP-website/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/Jiangyan-Zhao/BKP-website/actions/workflows/deploy-pages.yml) 
+[![CRAN status](https://www.r-pkg.org/badges/version/BKP)](https://cran.r-project.org/web/packages/BKP/BKP.html) 
 [![License: GPL-3.0-or-later](https://img.shields.io/badge/license-GPL--3.0--or--later-blue.svg)](LICENSE)
 
 This repository contains the companion website for **BKP: Beta Kernel Process Modeling**, an R package for nonparametric modeling of spatially varying binary, binomial, categorical, and multinomial probabilities.
 
 The website provides an accessible introduction to the Beta Kernel Process (BKP), its Dirichlet extension (DKP), and the scalable TwinBKP and TwinDKP approximations. It combines methodological explanations, installation guidance, interactive visualizations, reproducible examples, and links to the associated software and paper.
 
-**Live website:**
-https://jiangyan-zhao.github.io/BKP-website/
+**Live website:** <https://jiangyan-zhao.github.io/BKP-website/>
 
 ## Overview
 
-The Beta Kernel Process directly models an input-dependent probability function using kernel-weighted observations and conjugate Beta updates. For binary or binomial data, the posterior distribution at an input location (\mathbf{x}) is
+The Beta Kernel Process directly models an input-dependent probability function using kernel-weighted observations and conjugate Beta updates. For binary or binomial data, the posterior distribution at an input location $\mathbf{x}$ is
 
-[
-\pi(\mathbf{x}) \mid \mathcal{D}_n
+$$\pi(\mathbf{x}) \mid \mathcal{D}_n
 \sim
-\operatorname{Beta}!\left(
+\operatorname{Beta}\!\left(
 \alpha_n(\mathbf{x}),
 \beta_n(\mathbf{x})
-\right),
-]
+\right),$$
 
 where
 
-[
-\alpha_n(\mathbf{x})
-====================
-
+$$\alpha_n(\mathbf{x})
+=
 \alpha_0(\mathbf{x})
 +
 \sum_{i=1}^{n}
-k(\mathbf{x},\mathbf{x}_i)y_i,
-]
+k(\mathbf{x},\mathbf{x}_i)y_i,$$
 
 and
 
-[
-\beta_n(\mathbf{x})
-===================
-
+$$\beta_n(\mathbf{x})
+=
 \beta_0(\mathbf{x})
 +
 \sum_{i=1}^{n}
-k(\mathbf{x},\mathbf{x}_i)(m_i-y_i).
-]
+k(\mathbf{x},\mathbf{x}_i)(m_i-y_i).$$
 
 This construction yields closed-form posterior summaries on the probability scale without introducing a latent Gaussian process or requiring MCMC, Laplace approximation, or variational inference.
 
 The framework is extended in two directions:
 
-* **DKP** uses Dirichlet–multinomial updating for categorical and multinomial responses.
-* **TwinBKP and TwinDKP** use a global–local approximation based on twinning and nearest-neighbor selection for scalable modeling with large datasets.
+- **DKP** uses Dirichlet–multinomial updating for categorical and multinomial responses.
+- **TwinBKP and TwinDKP** use a global–local approximation based on twinning and nearest-neighbor selection for scalable modeling with large datasets.
 
 ## Website contents
 
@@ -71,23 +62,23 @@ Installation instructions for the CRAN and development versions of the `BKP` pac
 
 An explanation of:
 
-* Beta Kernel Process posterior updating;
-* Dirichlet Kernel Process modeling;
-* supported kernel functions;
-* kernel hyperparameter tuning;
-* prior specification;
-* posterior prediction and uncertainty quantification;
-* global–local approximation in TwinBKP and TwinDKP.
+- Beta Kernel Process posterior updating;
+- Dirichlet Kernel Process modeling;
+- supported kernel functions;
+- kernel hyperparameter tuning;
+- prior specification;
+- posterior prediction and uncertainty quantification;
+- global–local approximation in TwinBKP and TwinDKP.
 
 ### Interactive demonstrations
 
 Interactive visualizations show how kernel parameters and prediction locations affect:
 
-* kernel weights;
-* posterior means;
-* posterior uncertainty;
-* global and local information sharing;
-* TwinBKP approximation behavior.
+- kernel weights;
+- posterior means;
+- posterior uncertainty;
+- global and local information sharing;
+- TwinBKP approximation behavior.
 
 ### Examples
 
@@ -99,32 +90,32 @@ Direct links are provided to the R package, CRAN release, software paper, source
 
 ## Related resources
 
-| Resource                                                            | Description                                                               |
-| ------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| [BKP website](https://jiangyan-zhao.github.io/BKP-website/)         | Interactive companion website                                             |
-| [BKP on CRAN](https://cran.r-project.org/web/packages/BKP/BKP.html) | Stable release of the R package                                           |
-| [BKP package repository](https://github.com/Jiangyan-Zhao/BKP)      | Package source code, documentation, tests, and development version        |
-| [BKP paper repository](https://github.com/Jiangyan-Zhao/BKP-paper)  | Paper source, replication scripts, data instructions, figures, and slides |
-| [Software paper on arXiv](https://arxiv.org/abs/2508.10447)         | Methodological and software description                                   |
+| Resource | Description |
+|----------------------------------|-------------------------------------|
+| [BKP website](https://jiangyan-zhao.github.io/BKP-website/) | Interactive companion website |
+| [BKP on CRAN](https://cran.r-project.org/web/packages/BKP/BKP.html) | Stable release of the R package |
+| [BKP package repository](https://github.com/Jiangyan-Zhao/BKP) | Package source code, documentation, tests, and development version |
+| [BKP paper repository](https://github.com/Jiangyan-Zhao/BKP-paper) | Paper source, replication scripts, data instructions, figures, and slides |
+| [Software paper on arXiv](https://arxiv.org/abs/2508.10447) | Methodological and software description |
 
 ## Installing the BKP package
 
 Install the stable version from CRAN:
 
-```r
+``` r
 install.packages("BKP")
 ```
 
 Install the development version from GitHub using `pak`:
 
-```r
+``` r
 install.packages("pak")
 pak::pak("Jiangyan-Zhao/BKP")
 ```
 
 A minimal BKP workflow is:
 
-```r
+``` r
 library(BKP)
 
 set.seed(123)
@@ -155,35 +146,35 @@ For complete package documentation, examples, and function references, see the [
 
 The website is implemented using:
 
-* [React](https://react.dev/);
-* [TypeScript](https://www.typescriptlang.org/);
-* [Vite](https://vite.dev/);
-* [KaTeX](https://katex.org/) for mathematical typesetting;
-* GitHub Actions and GitHub Pages for continuous deployment.
+- [React](https://react.dev/);
+- [TypeScript](https://www.typescriptlang.org/);
+- [Vite](https://vite.dev/);
+- [KaTeX](https://katex.org/) for mathematical typesetting;
+- GitHub Actions and GitHub Pages for continuous deployment.
 
 ## Local development
 
 ### Requirements
 
-* Node.js 22 or later;
-* npm.
+- Node.js 22 or later;
+- npm.
 
 Clone the repository:
 
-```bash
+``` bash
 git clone https://github.com/Jiangyan-Zhao/BKP-website.git
 cd BKP-website
 ```
 
 Install the dependencies:
 
-```bash
+``` bash
 npm install
 ```
 
 Start the local development server:
 
-```bash
+``` bash
 npm run dev
 ```
 
@@ -193,7 +184,7 @@ Open the local URL printed by Vite in a web browser.
 
 Create an optimized production build:
 
-```bash
+``` bash
 npm run build
 ```
 
@@ -201,7 +192,7 @@ The generated files are written to the `dist/` directory.
 
 Preview the production build locally:
 
-```bash
+``` bash
 npm run preview
 ```
 
@@ -209,13 +200,12 @@ npm run preview
 
 The website is deployed automatically through GitHub Actions.
 
-Each push to the `main` branch triggers the deployment workflow, which:
+Each push to the `main` branch triggers the deployment workflow. The workflow:
 
-1. checks the external links used by the website and README;
-2. installs the project dependencies;
-3. runs the TypeScript and Vite production build;
-4. uploads the contents of `dist/`;
-5. deploys the resulting artifact to GitHub Pages.
+1. runs an external-link check for the website and README;
+2. installs the project dependencies and creates the production build;
+3. uploads the contents of `dist/`;
+4. deploys the resulting artifact to GitHub Pages.
 
 The workflow can also be run manually from the **Actions** tab of the repository.
 
@@ -223,16 +213,16 @@ The workflow can also be run manually from the **Actions** tab of the repository
 
 The figures and statistical examples presented on the website are based on the BKP software paper and its associated reproducibility repository:
 
-https://github.com/Jiangyan-Zhao/BKP-paper
+<https://github.com/Jiangyan-Zhao/BKP-paper>
 
 The replication repository contains:
 
-* R scripts for the synthetic examples;
-* scripts and instructions for the real-data applications;
-* generated figures;
-* paper source files;
-* presentation slides;
-* dependency information.
+- R scripts for the synthetic examples;
+- scripts and instructions for the real-data applications;
+- generated figures;
+- paper source files;
+- presentation slides;
+- dependency information.
 
 The website itself is intended for presentation and interaction. The complete statistical analyses should be reproduced from the `BKP-paper` repository rather than from this frontend repository.
 
@@ -240,7 +230,7 @@ The website itself is intended for presentation and interaction. The complete st
 
 When referring to the BKP methodology or software paper, please cite:
 
-```bibtex
+``` bibtex
 @Misc{Zhao2025BKP,
   title  = {BKP: An R Package for Beta Kernel Process Modeling},
   author = {Jiangyan Zhao and Kunhai Qing and Jin Xu},
@@ -253,7 +243,7 @@ When referring to the BKP methodology or software paper, please cite:
 
 When referring specifically to the R package, please cite:
 
-```bibtex
+``` bibtex
 @Manual{BKP2026,
   title  = {BKP: Beta Kernel Process Modeling},
   author = {Jiangyan Zhao and Kunhai Qing and Jin Xu},
@@ -266,7 +256,7 @@ When referring specifically to the R package, please cite:
 
 The recommended citation for the installed package can also be obtained in R:
 
-```r
+``` r
 citation("BKP")
 ```
 
