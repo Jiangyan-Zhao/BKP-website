@@ -908,7 +908,8 @@ a:focus-visible { outline: 3px solid var(--lime); outline-offset: 3px; }
   align-content: start;
   gap: 14px;
 }
-.resources-section .paper-card { grid-row: 1 / span 3; }
+.resources-section .paper-card { grid-column: 1; grid-row: 1 / span 4; }
+.resources-section .resource-card { grid-column: 2; }
 .paper-card,
 .resource-card { border: 1.5px solid var(--ink); transition: transform 160ms ease, box-shadow 160ms ease; }
 .paper-card:hover,
@@ -924,6 +925,7 @@ a:focus-visible { outline: 3px solid var(--lime); outline-offset: 3px; }
 .resource-card.blue { background: var(--blue); color: white; }
 .resource-card.lime { background: var(--lime); }
 .resource-card.coral { background: var(--coral); }
+.resource-card.soft { background: var(--blue-soft); }
 .resource-card b { font-size: 0.92rem; }
 .resource-card-copy { display: grid; gap: 3px; }
 .resource-card-copy small {
@@ -1128,6 +1130,8 @@ footer a:hover { color: var(--blue); }
   .example-tabs button { border-right: 0; border-bottom: 1px solid var(--ink); }
   .example-tabs button:last-child { border-bottom: 0; }
   .resource-stack { grid-template-columns: 1fr; }
+  .resources-section .paper-card,
+  .resources-section .resource-card { grid-column: auto; }
   .resources-section .paper-card { grid-row: auto; }
   .citation-panel { grid-template-columns: 1fr; }
   footer { grid-template-columns: auto 1fr; }
