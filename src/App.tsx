@@ -1004,6 +1004,9 @@ export default function Home() {
           <a className="resource-card coral" href="https://github.com/Jiangyan-Zhao/BKP-paper" target="_blank" rel="noreferrer">
             <span>Reproduce</span><b>Code, figures & manuscript</b><i>↗</i>
           </a>
+          <a className="resource-card soft" href="https://github.com/Jiangyan-Zhao/BKP-paper/blob/master/slides/BKP_Slides.pdf" target="_blank" rel="noreferrer">
+            <span>Slides · PDF</span><b>Presentation deck</b><i>↗</i>
+          </a>
         </aside>
         <CitationPanel />
       </section>
