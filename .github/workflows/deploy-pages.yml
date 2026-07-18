@@ -25,6 +25,7 @@ jobs:
         with:
           args: >-
             --verbose --no-progress --max-retries 3
+            --scheme http --scheme https
             --accept '200..=299,429'
             './src/**/*.tsx' './README.md' './index.html'
           fail: true
