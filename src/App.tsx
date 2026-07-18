@@ -1060,7 +1060,7 @@ export default function Home() {
           </article>
           <article className="research-card">
             <div className="research-card-copy">
-              <span>BKP-based research · Phase I trials</span>
+              <span>BKP-based follow-up research</span>
               <b>Shared Keyboard (SKBD)</b>
               <small>An improved Bayesian Phase I design built on BKP.</small>
             </div>
