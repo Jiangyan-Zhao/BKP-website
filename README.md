@@ -1,7 +1,7 @@
 # BKP: Beta Kernel Process Modeling Website
 
 [![Deploy to GitHub Pages](https://github.com/Jiangyan-Zhao/BKP-website/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/Jiangyan-Zhao/BKP-website/actions/workflows/deploy-pages.yml) 
-[![CRAN status](https://www.r-pkg.org/badges/version/BKP)](https://cran.r-project.org/web/packages/BKP/BKP.html) 
+[![CRAN status](https://www.r-pkg.org/badges/version/BKP)](https://cran.r-project.org/web/packages/BKP/index.html) 
 [![License: GPL-3.0-or-later](https://img.shields.io/badge/license-GPL--3.0--or--later-blue.svg)](LICENSE)
 
 This repository contains the companion website for **BKP: Beta Kernel Process Modeling**, an R package for nonparametric modeling of spatially varying binary, binomial, categorical, and multinomial probabilities.
@@ -93,7 +93,7 @@ Direct links are provided to the R package, CRAN release, software paper, source
 | Resource | Description |
 |----------------------------------|-------------------------------------|
 | [BKP website](https://jiangyan-zhao.github.io/BKP-website/) | Interactive companion website |
-| [BKP on CRAN](https://cran.r-project.org/web/packages/BKP/BKP.html) | Stable release of the R package |
+| [BKP on CRAN](https://cran.r-project.org/web/packages/BKP/index.html) | Stable release of the R package |
 | [BKP package repository](https://github.com/Jiangyan-Zhao/BKP) | Package source code, documentation, tests, and development version |
 | [BKP paper repository](https://github.com/Jiangyan-Zhao/BKP-paper) | Paper source, replication scripts, data instructions, figures, and slides |
 | [Software paper on arXiv](https://arxiv.org/abs/2508.10447) | Methodological and software description |
