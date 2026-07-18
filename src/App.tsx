@@ -450,6 +450,14 @@ function TwinBkpExplorer() {
   const paperUrl = `${import.meta.env.BASE_URL}results/ex8.pdf`;
   const xPosition = (x: number) => twinChart.left + ((x + 2) / 4) * twinChart.width;
   const yPosition = (probability: number) => twinChart.top + (1 - probability) * twinChart.height;
+  const setQueryFromPlot = (clientX: number, svg: SVGSVGElement) => {
+    const bounds = svg.getBoundingClientRect();
+    if (bounds.width === 0) return;
+
+    const svgX = ((clientX - bounds.left) / bounds.width) * 1160;
+    const value = ((svgX - twinChart.left) / twinChart.width) * 4 - 2;
+    setQuery(Math.min(2, Math.max(-2, Number(value.toFixed(2)))));
+  };
   const truthPath = useMemo(
     () => Array.from({ length: 321 }, (_, index) => {
       const x = -2 + (index * 4) / 320;
@@ -510,6 +518,19 @@ function TwinBkpExplorer() {
             return <polygon key={`local-${index}`} className="twin-local-point" points={`${x},${y - 6.5} ${x + 6.5},${y} ${x},${y + 6.5} ${x - 6.5},${y}`} />;
           })}
 
+          <rect
+            x={twinChart.left}
+            y={twinChart.top}
+            width={twinChart.width}
+            height={twinChart.height}
+            fill="transparent"
+            cursor="crosshair"
+            onPointerDown={(event) => {
+              const svg = event.currentTarget.ownerSVGElement;
+              if (svg) setQueryFromPlot(event.clientX, svg);
+            }}
+          />
+
           <foreignObject className="twin-axis-math" x="456" y={twinChart.top + twinChart.height + 29} width="80" height="28" aria-hidden="true">
             <div><MathFormula>{"x"}</MathFormula></div>
           </foreignObject>
@@ -530,7 +551,7 @@ function TwinBkpExplorer() {
         </svg>
         <div className="twin-slider-row">
           <label className="twin-slider">
-            <span>Move testing location <MathFormula>{"x_0"}</MathFormula></span>
+            <span>Click the plot or move testing location <MathFormula>{"x_0"}</MathFormula></span>
             <input
               type="range"
               min="-2"
