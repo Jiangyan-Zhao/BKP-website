@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import katex from "katex";
 
+const packageVersion = "0.3.1";
+
 type Example2Observation = {
   x: number;
   trials: number;
@@ -615,7 +617,7 @@ function TwinBkpExplorer() {
   );
 }
 
-type ExampleKey = "surface" | "warbler";
+type ExampleKey = "surface" | "twindkp" | "warbler";
 
 const examples: Record<
   ExampleKey,
@@ -637,6 +639,15 @@ const examples: Record<
     alt: "DKP predicted classes and maximum predicted probability for the Iris data",
     source: "s4_ex7_dkp_iris_classification.R",
     sourceUrl: "https://github.com/Jiangyan-Zhao/BKP-paper/blob/master/code/s4_ex7_dkp_iris_classification.R",
+  },
+  twindkp: {
+    title: "TwinDKP multinomial curves",
+    description: "Example 9 applies the scalable TwinDKP global–local approximation to 500 observations with three-class multinomial responses.",
+    tag: "TwinDKP · Example 9",
+    figure: "/results/ex9.pdf",
+    alt: "TwinDKP posterior summaries and true probability curves for three multinomial classes",
+    source: "s4_ex9_twindkp_1d_multinomial.R",
+    sourceUrl: "https://github.com/Jiangyan-Zhao/BKP-paper/blob/master/code/s4_ex9_twindkp_1d_multinomial.R",
   },
   warbler: {
     title: "Mourning Warbler predictions",
@@ -717,7 +728,7 @@ function InstallPanel() {
         <code><span>&gt;</span> {command}</code>
         <button onClick={copyCommand} aria-label="Copy installation command">{copied ? "Copied" : "Copy"}</button>
       </div>
-      <pre aria-label="BKP quick start"><code><span># fit a probability surface</span>{`\nlibrary(BKP)\nfit <- fit_BKP(X, y, m, Xbounds = Xbounds)\npred <- predict(fit, Xnew = Xnew)\nplot(fit)`}</code></pre>
+      <pre aria-label="Complete reproducible BKP quick start"><code><span># complete reproducible example</span>{`\nlibrary(BKP)\nset.seed(123)\nX <- matrix(seq(-2, 2, length.out = 30), ncol = 1)\nm <- rep(50, nrow(X))\nprob <- plogis(2 * X[, 1])\ny <- rbinom(nrow(X), size = m, prob = prob)\nbounds <- matrix(c(-2, 2), nrow = 1)\nfit <- fit_BKP(X, y, m, Xbounds = bounds)\nXnew <- matrix(seq(-2, 2, length.out = 100), ncol = 1)\npred <- predict(fit, Xnew = Xnew)\nhead(pred)\nplot(fit, engine = "ggplot")`}</code></pre>
     </div>
   );
 }
@@ -896,7 +907,7 @@ export default function Home() {
       <section className="hero" id="overview">
         <div className="hero-copy">
           <a className="status-pill" href="https://cran.r-project.org/package=BKP" target="_blank" rel="noreferrer">
-            <span>✓</span> CRAN · stable <b>0.3.1</b>
+            <span>✓</span> CRAN · stable <b>{packageVersion}</b>
           </a>
           <p className="eyebrow">Beta Kernel Process</p>
           <h1>BKP</h1>
@@ -962,6 +973,13 @@ export default function Home() {
             <p>Choose BKP or DKP by response type, then use a Twin variant when the data call for a scalable global–local approximation.</p>
           </div>
 
+          <div className="capability-grid" aria-label="BKP modeling capabilities">
+            <article><span>Kernels</span><b>Gaussian · Matérn 5/2 · Matérn 3/2 · Wendland</b></article>
+            <article><span>Length scales</span><b>Isotropic or anisotropic</b></article>
+            <article><span>Tuning</span><b>LOOCV · Brier score or log-loss</b></article>
+            <article><span>ESS calibration</span><b>Optional Shepard scaling for BKP / DKP</b></article>
+          </div>
+
           <div className="model-grid">
             <article><span>01</span><h3>BKP</h3><p>Full modeling for binary or aggregated binomial responses.</p><code>fit_BKP()</code></article>
             <article><span>02</span><h3>DKP</h3><p>Full modeling for categorical or multinomial responses.</p><code>fit_DKP()</code></article>
@@ -1005,12 +1023,15 @@ export default function Home() {
           </p>
         </header>
         <aside className="resource-stack" aria-label="Project resources">
-          <a className="paper-card" href="https://arxiv.org/abs/2508.10447" target="_blank" rel="noreferrer">
-            <span className="resource-type">Paper · arXiv</span>
+          <article className="paper-card">
+            <span className="resource-type">Software paper</span>
             <h3>BKP: An R Package for Beta Kernel Process Modeling</h3>
             <p>Jiangyan Zhao, Kunhai Qing, and Jin Xu</p>
-            <b>Read the paper <i>↗</i></b>
-          </a>
+            <div className="paper-card-links">
+              <a href="https://arxiv.org/abs/2508.10447" target="_blank" rel="noreferrer"><b>Read on arXiv</b><i>↗</i></a>
+              <a href="https://github.com/Jiangyan-Zhao/BKP-paper/blob/master/paper/TR_BKP.pdf" target="_blank" rel="noreferrer"><b>Latest manuscript PDF</b><i>↗</i></a>
+            </div>
+          </article>
           <a className="resource-card blue" href="https://github.com/Jiangyan-Zhao/BKP" target="_blank" rel="noreferrer">
             <span>GitHub</span>
             <div className="resource-card-copy">
@@ -1020,7 +1041,7 @@ export default function Home() {
             <i aria-hidden="true">★</i>
           </a>
           <a className="resource-card lime" href="https://cran.r-project.org/web/packages/BKP/refman/BKP.html" target="_blank" rel="noreferrer">
-            <span>Documentation · 0.3.1</span><b>Function reference & package manual</b><i>↗</i>
+            <span>Documentation · {packageVersion}</span><b>Function reference & package manual</b><i>↗</i>
           </a>
           <a className="resource-card coral" href="https://github.com/Jiangyan-Zhao/BKP-paper" target="_blank" rel="noreferrer">
             <span>Reproduce</span><b>Code, figures & manuscript</b><i>↗</i>

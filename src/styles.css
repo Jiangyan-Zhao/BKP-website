@@ -602,10 +602,37 @@ a:focus-visible { outline: 3px solid var(--lime); outline-offset: 3px; }
   line-height: 1.65;
 }
 
+.capability-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 44px;
+}
+.capability-grid article {
+  min-width: 0;
+  padding: 18px 20px;
+  border: 1px solid rgba(16, 19, 26, 0.24);
+  background: rgba(255, 255, 255, 0.56);
+}
+.capability-grid span {
+  color: var(--blue);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.68rem;
+  font-weight: 720;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.capability-grid b {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
 .model-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  margin-top: 66px;
+  margin-top: 28px;
   border-top: 1.5px solid var(--ink);
   border-bottom: 1.5px solid var(--ink);
 }
@@ -914,12 +941,22 @@ a:focus-visible { outline: 3px solid var(--lime); outline-offset: 3px; }
 .resource-card { border: 1.5px solid var(--ink); transition: transform 160ms ease, box-shadow 160ms ease; }
 .paper-card:hover,
 .resource-card:hover { transform: translate(-3px, -3px); box-shadow: 6px 6px 0 var(--ink); }
-.paper-card { min-height: 310px; padding: 32px; background: var(--card); }
+.paper-card { display: flex; min-height: 310px; flex-direction: column; padding: 32px; background: var(--card); }
 .resource-type,
 .resource-card span { font-family: var(--font-geist-mono), monospace; font-size: 0.76rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
 .paper-card h3 { margin: 44px 0 16px; font-size: clamp(1.7rem, 2.6vw, 2.8rem); line-height: 1.02; letter-spacing: -0.055em; }
-.paper-card p { margin: 0 0 42px; color: var(--muted); }
-.paper-card b { display: flex; justify-content: space-between; color: var(--blue); }
+.paper-card p { margin: 0 0 32px; color: var(--muted); }
+.paper-card-links { display: grid; gap: 12px; margin-top: auto; }
+.paper-card-links a {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: center;
+  color: var(--blue);
+  font-weight: 700;
+}
+.paper-card-links a + a { padding-top: 12px; border-top: 1px solid rgba(16, 19, 26, 0.16); }
+.paper-card-links a:hover { text-decoration: underline; }
 .paper-card i, .resource-card i { font-style: normal; font-size: 1.4rem; }
 .resource-card { display: grid; grid-template-columns: auto 1fr auto; gap: 18px; align-items: center; min-height: 88px; padding: 20px 24px; }
 .resource-card.blue { background: var(--blue); color: white; }
@@ -1060,6 +1097,7 @@ footer a:hover { color: var(--blue); }
   .mini-density { display: none; }
   .section-intro { grid-template-columns: 1fr 1.8fr; }
   .section-intro > p:last-child { grid-column: 2; }
+  .capability-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .model-grid { grid-template-columns: repeat(2, 1fr); }
   .model-grid article:nth-child(2) { border-right: 0; }
   .model-grid article:nth-child(-n + 2) { border-bottom: 1px solid var(--ink); }
@@ -1068,7 +1106,7 @@ footer a:hover { color: var(--blue); }
   .twin-paper { border-top: 1px solid var(--ink); border-left: 0; }
   .twin-paper-figure { height: 480px; }
   .example-explorer { grid-template-columns: 1fr; }
-  .example-tabs { display: grid; grid-template-columns: repeat(2, 1fr); border: 1px solid var(--ink); }
+  .example-tabs { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--ink); }
   .example-tabs button { border-right: 1px solid var(--ink); border-bottom: 0; }
   .example-tabs button:last-child { border-right: 0; }
   .install-section { grid-template-columns: 1fr; }
@@ -1161,6 +1199,7 @@ footer a:hover { color: var(--blue); }
   .method-body,
   .install-section,
   .resources-section { padding: 72px 22px; }
+  .capability-grid { grid-template-columns: 1fr; }
   .model-grid { grid-template-columns: 1fr; }
   .model-grid article { min-height: 220px; border-right: 0; border-bottom: 1px solid var(--ink); }
   .model-grid article:nth-child(3) { border-bottom: 1px solid var(--ink); }

@@ -15,6 +15,20 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  links:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Check external links
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: >-
+            --verbose --no-progress --max-retries 3
+            --accept '200..=299,429'
+            './src/**/*.tsx' './README.md' './index.html'
+          fail: true
+
   build:
     runs-on: ubuntu-latest
     steps:
