@@ -1077,32 +1077,50 @@ export default function Home() {
           </a>
         </aside>
 
-        <article className="followup-research-card" aria-labelledby="skbd-title">
-          <div className="followup-research-copy">
-            <span className="followup-research-kicker">BKP-based follow-up research</span>
-            <h3 id="skbd-title">Shared Keyboard: An Improved Bayesian Design for Phase I Clinical Trials via Beta Kernel Process</h3>
-            <p>
-              SKBD applies BKP to Phase I dose-finding, borrowing information across neighboring
-              dose levels to guide escalation and de-escalation while retaining interpretable
-              toxicity estimates.
-            </p>
-            <div className="followup-research-meta" aria-label="SKBD research scope">
-              <span><b>Application</b> Phase I dose-finding</span>
-              <span><b>Foundation</b> Beta kernel process</span>
+        <section className="followup-research-section" aria-labelledby="followup-research-title">
+          <header className="followup-research-heading">
+            <div>
+              <p className="section-kicker">Downstream applications</p>
+              <h3 id="followup-research-title">BKP-based follow-up research</h3>
             </div>
-          </div>
-          <div className="followup-research-links" aria-label="SKBD research links">
-            <a href="https://arxiv.org/abs/2605.25043" target="_blank" rel="noreferrer">
-              <span>Paper</span><b>arXiv:2605.25043</b><i aria-hidden="true">↗</i>
-            </a>
-            <a href="https://github.com/Jiangyan-Zhao/SKBD" target="_blank" rel="noreferrer">
-              <span>Method code</span><b>Jiangyan-Zhao/SKBD</b><i aria-hidden="true">↗</i>
-            </a>
-            <a href="https://github.com/Jiangyan-Zhao/SKBD-paper" target="_blank" rel="noreferrer">
-              <span>Reproduce</span><b>Jiangyan-Zhao/SKBD-paper</b><i aria-hidden="true">↗</i>
-            </a>
-          </div>
-        </article>
+            <p>
+              Selected methodological work that carries BKP into domain-specific problems,
+              beginning with Bayesian dose-finding in Phase I trials.
+            </p>
+          </header>
+
+          <article className="followup-project-card" aria-labelledby="skbd-title">
+            <div className="followup-project-copy">
+              <span className="followup-project-domain">Phase I dose-finding</span>
+              <h4 id="skbd-title">Shared Keyboard: An Improved Bayesian Design for Phase I Clinical Trials via Beta Kernel Process</h4>
+              <p>
+                SKBD brings the Beta kernel process into Phase I dose-finding. By borrowing
+                information smoothly across neighboring dose levels, it supports coherent
+                escalation and de-escalation decisions while preserving interpretable,
+                dose-specific toxicity estimates.
+              </p>
+              <div className="followup-project-meta" aria-label="SKBD research scope">
+                <span><small>Application</small><b>Phase I clinical trials</b></span>
+                <span><small>Built on</small><b>Beta kernel process</b></span>
+              </div>
+            </div>
+
+            <div className="followup-project-links" aria-label="SKBD research links">
+              <a href="https://arxiv.org/abs/2605.25043" target="_blank" rel="noreferrer">
+                <div><span>Paper</span><b>Read the preprint</b><small>arXiv:2605.25043</small></div>
+                <i aria-hidden="true">↗</i>
+              </a>
+              <a href="https://github.com/Jiangyan-Zhao/SKBD" target="_blank" rel="noreferrer">
+                <div><span>Method code</span><b>SKBD implementation</b><small>Jiangyan-Zhao/SKBD</small></div>
+                <i aria-hidden="true">↗</i>
+              </a>
+              <a href="https://github.com/Jiangyan-Zhao/SKBD-paper" target="_blank" rel="noreferrer">
+                <div><span>Reproduce</span><b>Analysis repository</b><small>Jiangyan-Zhao/SKBD-paper</small></div>
+                <i aria-hidden="true">↗</i>
+              </a>
+            </div>
+          </article>
+        </section>
 
         <CitationPanel />
       </section>
