@@ -757,6 +757,15 @@ const bkpBibtex = `@Misc{Zhao2025BKP,
   note   = {arXiv:2508.10447},
   url    = {https://arxiv.org/abs/2508.10447},
   doi    = {10.48550/arXiv.2508.10447}
+}
+
+@Manual{Zhao2026BKPpackage,
+  title  = {BKP: Beta Kernel Process Modeling},
+  author = {Jiangyan Zhao and Kunhai Qing and Jin Xu},
+  year   = {2026},
+  note   = {R package version 0.3.1},
+  url    = {https://cran.r-project.org/package=BKP},
+  doi    = {10.32614/CRAN.package.BKP}
 }`;
 
 function CitationPanel() {
@@ -774,8 +783,8 @@ function CitationPanel() {
         <p className="section-kicker">Cite the project</p>
         <h3 id="citation-title">Using BKP in your work?</h3>
         <p>
-          Cite the package from R with <code>citation("BKP")</code>, or copy the
-          paper entry for your bibliography.
+          Cite the paper for the methodology and the package for the software version.
+          If your work relies on both, include both entries.
         </p>
         <a href="https://cran.r-project.org/web/packages/BKP/citation.html" target="_blank" rel="noreferrer">
           View CRAN citation information ↗
@@ -783,9 +792,9 @@ function CitationPanel() {
       </div>
       <div className="citation-code">
         <div>
-          <span>BibTeX · paper</span>
-          <button type="button" onClick={copyBibtex} aria-label="Copy BKP paper BibTeX">
-            {copied ? "Copied" : "Copy BibTeX"}
+          <span>BibTeX · paper + package</span>
+          <button type="button" onClick={copyBibtex} aria-label="Copy BKP paper and package BibTeX">
+            {copied ? "Copied" : "Copy both"}
           </button>
         </div>
         <pre><code>{bkpBibtex}</code></pre>
