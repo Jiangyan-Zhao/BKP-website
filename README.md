@@ -17,7 +17,7 @@ The Beta Kernel Process directly models an input-dependent probability function 
 ```math
 \pi(\mathbf{x}) \mid \mathcal{D}_n
 \sim
-\operatorname{Beta}\!\left(
+\mathrm{Beta}\!\left(
 \alpha_n(\mathbf{x}),
 \beta_n(\mathbf{x})
 \right),
