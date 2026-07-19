@@ -997,52 +997,78 @@ export default function Home() {
             <header className="lineage-heading">
               <div>
                 <p className="section-kicker">Methodological lineage</p>
-                <h2 id="lineage-title">From correlated Beta processes to scalable BKP.</h2>
+                <h2 id="lineage-title">From smoothed Beta distributions to a unified, scalable R framework.</h2>
               </div>
               <p>
-                BKP belongs to a broader family of kernel-weighted Beta and Dirichlet models.
-                These milestones represent related contributions rather than a strictly linear sequence.
+                BKP is not a Gaussian process with its distribution swapped. It works directly
+                on the probability scale: kernel weights aggregate neighboring Bernoulli or
+                binomial observations as fractional pseudo-counts, followed by pointwise Beta
+                or Dirichlet conjugate updating. The milestones below are related developments
+                across several research communities rather than a strictly linear sequence.
               </p>
             </header>
 
+            <dl className="lineage-terms" aria-label="Meaning of the Beta Kernel Process name">
+              <div>
+                <dt>Beta / Dirichlet</dt>
+                <dd>Pointwise posterior-style distributions for local binomial or multinomial probabilities.</dd>
+              </div>
+              <div>
+                <dt>Kernel</dt>
+                <dd>Similarity-weighted borrowing of neighboring observations as fractional pseudo-counts.</dd>
+              </div>
+              <div>
+                <dt>Process</dt>
+                <dd>An input-indexed collection of distributions—not a GP-like joint stochastic-process posterior.</dd>
+              </div>
+            </dl>
+
             <ol className="lineage-timeline">
               <li className="lineage-step history">
+                <a href="https://hal.science/hal-00637575/" target="_blank" rel="noreferrer">
+                  <span className="lineage-label">2009–2012 · Robotics</span>
+                  <h3>Smoothed beta distributions</h3>
+                  <p>Used nonparametric smoothed Beta distributions to learn grasping probabilities from Bernoulli trials and guide active exploration.</p>
+                  <small>Montesano and Lopes ↗</small>
+                </a>
+              </li>
+              <li className="lineage-step history">
                 <a href="https://dl.acm.org/doi/10.5555/2283516.2283608" target="_blank" rel="noreferrer">
-                  <span className="lineage-label">2011 · CCBP</span>
+                  <span className="lineage-label">2011 · AI and decision making</span>
                   <h3>Continuous Correlated Beta Processes</h3>
-                  <p>Introduced kernel-based sharing of Bernoulli evidence across a continuous input space, with a natural Dirichlet extension.</p>
+                  <p>Formalized kernel-weighted evidence sharing across a continuum of Bernoulli experiments, with a natural Dirichlet extension.</p>
                   <small>Goetschalckx et al. ↗</small>
                 </a>
               </li>
               <li className="lineage-step history">
                 <a href="https://doi.org/10.1002/sam.11241" target="_blank" rel="noreferrer">
-                  <span className="lineage-label">2014 · Beta kernel</span>
+                  <span className="lineage-label">2014 · Data mining</span>
                   <h3>Bayesian beta kernel model</h3>
-                  <p>Developed beta-kernel updating for binary classification, imbalanced data, and online learning.</p>
+                  <p>Developed probability-scale beta-kernel updating for binary classification, imbalanced data, and online learning.</p>
                   <small>MacKenzie et al. ↗</small>
                 </a>
               </li>
               <li className="lineage-step history">
                 <a href="https://proceedings.mlr.press/v97/rolland19a.html" target="_blank" rel="noreferrer">
-                  <span className="lineage-label">2019 · SBP</span>
+                  <span className="lineage-label">2019 · Statistical ML</span>
                   <h3>Smooth Beta Process</h3>
-                  <p>Studied sample-dependent local sharing and established convergence guarantees for smooth Bernoulli probability functions.</p>
+                  <p>Studied sample-dependent local sharing and established convergence guarantees for learning smooth Bernoulli probability functions.</p>
                   <small>Rolland et al. ↗</small>
                 </a>
               </li>
               <li className="lineage-step current">
                 <a href="https://arxiv.org/abs/2508.10447" target="_blank" rel="noreferrer">
-                  <span className="lineage-label">Current · Software</span>
+                  <span className="lineage-label">2025–2026 · Unified software</span>
                   <h3>BKP and DKP</h3>
-                  <p>Unify binomial and multinomial probability modeling with prior specification, LOOCV tuning, ESS calibration, and posterior tools.</p>
-                  <small>Software paper ↗</small>
+                  <p>Consolidate, formalize, extend, and implement the method family for binomial and multinomial data, with priors, loss-based tuning, ESS calibration, and posterior tools.</p>
+                  <small>BKP software paper ↗</small>
                 </a>
               </li>
               <li className="lineage-step scalable">
                 <a href="https://github.com/Jiangyan-Zhao/BKP" target="_blank" rel="noreferrer">
-                  <span className="lineage-label">Scalable · Global–local</span>
+                  <span className="lineage-label">2026 · Scalable extension</span>
                   <h3>TwinBKP and TwinDKP</h3>
-                  <p>Add a twinning-based global–local approximation for scalable inference with larger datasets.</p>
+                  <p>Combine a representative global subset selected by twinning with prediction-specific nearest neighbors while retaining the conjugate pseudo-count update.</p>
                   <small>Package implementation ↗</small>
                 </a>
               </li>
@@ -1052,9 +1078,42 @@ export default function Home() {
               <span>Open theoretical frontier · 2024</span>
               <p>
                 <a href="https://arxiv.org/abs/2407.06321" target="_blank" rel="noreferrer">Mussi et al.</a>
-                {" "}highlighted the unresolved challenge of obtaining tight guarantees for kernelized bandits with Bernoulli rewards.
+                {" "}explained why learning from kernelized Bernoulli observations is not a routine
+                Gaussian-to-Bernoulli substitution and highlighted the open challenge of tight
+                Bernoulli-specific guarantees for kernelized bandits.
               </p>
             </aside>
+
+            <section className="lineage-locality" aria-labelledby="locality-title">
+              <header>
+                <span>Localization clarified</span>
+                <div>
+                  <h3 id="locality-title">Locality at three levels.</h3>
+                  <p>
+                    “Local” may describe evidence weighting, compact kernel support, or
+                    prediction-specific data subsets. TwinBKP is analogous in spirit to localized
+                    GP ideas, but is adapted to BKP&apos;s conjugate pseudo-count structure.
+                  </p>
+                </div>
+              </header>
+              <ol>
+                <li>
+                  <small>Weight level</small>
+                  <b>Soft local borrowing</b>
+                  <span>Gaussian and Matérn kernels are globally supported but assign smoothly decaying weights.</span>
+                </li>
+                <li>
+                  <small>Kernel level</small>
+                  <b>Hard support</b>
+                  <span>The Wendland kernel assigns exactly zero weight outside its support radius.</span>
+                </li>
+                <li>
+                  <small>Subset level</small>
+                  <b>Global–local approximation</b>
+                  <span>Twin variants combine a representative global subset with prediction-specific nearest neighbors.</span>
+                </li>
+              </ol>
+            </section>
           </div>
 
           <div className="section-intro">
