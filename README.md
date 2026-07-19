@@ -41,7 +41,7 @@ The framework is extended in two directions:
 
 ## Methodological lineage
 
-For the broader methodological context—from Continuous Correlated Beta Processes and beta-kernel classification to the Smooth Beta Process, BKP/DKP, and scalable Twin variants—see the [visual methodological lineage on the live website](https://jiangyan-zhao.github.io/BKP-website/?section=method).
+For the broader methodological context—from early smoothed Beta distributions in robotics through Continuous Correlated Beta Processes, beta-kernel classification, and the Smooth Beta Process to unified BKP/DKP software and scalable Twin variants—see the [visual methodological lineage on the live website](https://jiangyan-zhao.github.io/BKP-website/?section=method).
 
 ## Website contents
 
