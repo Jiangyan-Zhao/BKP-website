@@ -993,6 +993,70 @@ export default function Home() {
         </div>
 
         <div className="method-body">
+          <div className="lineage-block" aria-labelledby="lineage-title">
+            <header className="lineage-heading">
+              <div>
+                <p className="section-kicker">Methodological lineage</p>
+                <h2 id="lineage-title">From correlated Beta processes to scalable BKP.</h2>
+              </div>
+              <p>
+                BKP belongs to a broader family of kernel-weighted Beta and Dirichlet models.
+                These milestones represent related contributions rather than a strictly linear sequence.
+              </p>
+            </header>
+
+            <ol className="lineage-timeline">
+              <li className="lineage-step history">
+                <a href="https://dl.acm.org/doi/10.5555/2283516.2283608" target="_blank" rel="noreferrer">
+                  <span className="lineage-label">2011 · CCBP</span>
+                  <h3>Continuous Correlated Beta Processes</h3>
+                  <p>Introduced kernel-based sharing of Bernoulli evidence across a continuous input space, with a natural Dirichlet extension.</p>
+                  <small>Goetschalckx et al. ↗</small>
+                </a>
+              </li>
+              <li className="lineage-step history">
+                <a href="https://doi.org/10.1002/sam.11241" target="_blank" rel="noreferrer">
+                  <span className="lineage-label">2014 · Beta kernel</span>
+                  <h3>Bayesian beta kernel model</h3>
+                  <p>Developed beta-kernel updating for binary classification, imbalanced data, and online learning.</p>
+                  <small>MacKenzie et al. ↗</small>
+                </a>
+              </li>
+              <li className="lineage-step history">
+                <a href="https://proceedings.mlr.press/v97/rolland19a.html" target="_blank" rel="noreferrer">
+                  <span className="lineage-label">2019 · SBP</span>
+                  <h3>Smooth Beta Process</h3>
+                  <p>Studied sample-dependent local sharing and established convergence guarantees for smooth Bernoulli probability functions.</p>
+                  <small>Rolland et al. ↗</small>
+                </a>
+              </li>
+              <li className="lineage-step current">
+                <a href="https://arxiv.org/abs/2508.10447" target="_blank" rel="noreferrer">
+                  <span className="lineage-label">Current · Software</span>
+                  <h3>BKP and DKP</h3>
+                  <p>Unify binomial and multinomial probability modeling with prior specification, LOOCV tuning, ESS calibration, and posterior tools.</p>
+                  <small>Software paper ↗</small>
+                </a>
+              </li>
+              <li className="lineage-step scalable">
+                <a href="https://github.com/Jiangyan-Zhao/BKP" target="_blank" rel="noreferrer">
+                  <span className="lineage-label">Scalable · Global–local</span>
+                  <h3>TwinBKP and TwinDKP</h3>
+                  <p>Add a twinning-based global–local approximation for scalable inference with larger datasets.</p>
+                  <small>Package implementation ↗</small>
+                </a>
+              </li>
+            </ol>
+
+            <aside className="lineage-frontier">
+              <span>Open theoretical frontier · 2024</span>
+              <p>
+                <a href="https://arxiv.org/abs/2407.06321" target="_blank" rel="noreferrer">Mussi et al.</a>
+                {" "}highlighted the unresolved challenge of obtaining tight guarantees for kernelized bandits with Bernoulli rewards.
+              </p>
+            </aside>
+          </div>
+
           <div className="section-intro">
             <p className="section-kicker">One grammar, four paths</p>
             <h2>Pick the model that matches the outcome.</h2>
