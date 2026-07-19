@@ -39,6 +39,20 @@ The framework is extended in two directions:
 - **DKP** uses Dirichlet–multinomial updating for categorical and multinomial responses.
 - **TwinBKP and TwinDKP** use a global–local approximation based on twinning and nearest-neighbor selection for scalable modeling with large datasets.
 
+## Methodological lineage
+
+BKP belongs to a broader family of kernel-weighted Beta and Dirichlet models. The developments below are related contributions rather than a strictly linear sequence.
+
+| Development | Main contribution |
+|---|---|
+| [Continuous Correlated Beta Processes (2011)](https://dl.acm.org/doi/10.5555/2283516.2283608) | Introduced kernel-based sharing of Bernoulli evidence across a continuous input space, with a natural extension from Beta to Dirichlet distributions. |
+| [Bayesian beta kernel model (2014)](https://doi.org/10.1002/sam.11241) | Developed and extensively evaluated beta-kernel updating for binary classification, imbalanced data, and online learning. |
+| [Smooth Beta Process (2019)](https://proceedings.mlr.press/v97/rolland19a.html) | Studied sample-dependent local sharing and established convergence guarantees for learning smooth probability functions from Bernoulli observations. |
+| **BKP and DKP software framework** | Provides a unified R implementation for binary, binomial, categorical, and multinomial probability modeling, together with prior specification, effective-sample-size calibration, LOOCV-based kernel tuning, prediction, and uncertainty quantification. |
+| **TwinBKP and TwinDKP** | Add a twinning-based global–local approximation for scalable inference with large datasets. |
+
+Related theoretical questions remain open. [Mussi et al. (2024)](https://arxiv.org/abs/2407.06321) highlighted the challenge of obtaining tight guarantees for kernelized bandits with Bernoulli rewards; this work represents a theoretical frontier rather than a direct step in the methodological sequence.
+
 ## Website contents
 
 The website is organized into the following sections:
