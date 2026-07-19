@@ -12,23 +12,23 @@ The website provides an accessible introduction to the Beta Kernel Process (BKP)
 
 ## Overview
 
-The Beta Kernel Process directly models an input-dependent probability function using kernel-weighted observations and conjugate Beta updates. For binary or binomial data, the posterior distribution at an input location $\mathbf{x}$ is
+The Beta Kernel Process directly models an input-dependent probability function using kernel-weighted observations and conjugate Beta updates. For binary or binomial data, the posterior distribution at an input location $\boldsymbol{x}$ is
 
 ```math
 \begin{aligned}
-\pi(\mathbf{x}) \mid \mathcal{D}_n
+\pi(\boldsymbol{x}) \mid \mathcal{D}_n
 &\sim \mathrm{Beta}\!\left(
-\alpha_n(\mathbf{x}),
-\beta_n(\mathbf{x})
+\alpha_n(\boldsymbol{x}),
+\beta_n(\boldsymbol{x})
 \right), \\
-\alpha_n(\mathbf{x})
-&= \alpha_0(\mathbf{x})
+\alpha_n(\boldsymbol{x})
+&= \alpha_0(\boldsymbol{x})
 + \sum_{i=1}^{n}
-k(\mathbf{x},\mathbf{x}_i)y_i, \\
-\beta_n(\mathbf{x})
-&= \beta_0(\mathbf{x})
+k(\boldsymbol{x},\boldsymbol{x}_i)y_i, \\
+\beta_n(\boldsymbol{x})
+&= \beta_0(\boldsymbol{x})
 + \sum_{i=1}^{n}
-k(\mathbf{x},\mathbf{x}_i)(m_i-y_i).
+k(\boldsymbol{x},\boldsymbol{x}_i)(m_i-y_i).
 \end{aligned}
 ```
 
