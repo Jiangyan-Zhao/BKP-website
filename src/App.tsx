@@ -1077,7 +1077,7 @@ export default function Home() {
             <aside className="lineage-frontier">
               <span>Open theoretical frontier · 2024</span>
               <p>
-                <a href="https://arxiv.org/abs/2407.06321" target="_blank" rel="noreferrer">Mussi et al.</a>
+                <a href="https://arxiv.org/abs/2407.06321" target="_blank" rel="noreferrer" aria-label="Read Mussi et al. (2024)">Mussi et al. ↗</a>
                 {" "}explained why learning from kernelized Bernoulli observations is not a routine
                 Gaussian-to-Bernoulli substitution and highlighted the open challenge of tight
                 Bernoulli-specific guarantees for kernelized bandits.
