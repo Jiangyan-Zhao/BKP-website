@@ -1013,6 +1013,18 @@ a:focus-visible { outline: 3px solid var(--lime); outline-offset: 3px; }
   border: 1.5px solid var(--ink);
   background: #10131a;
   color: white;
+  box-shadow: 4px 4px 0 rgba(16, 19, 26, 0.16);
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+.lineage-frontier:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 7px 7px 0 var(--lime);
+}
+.lineage-frontier:focus-visible {
+  outline: 3px solid var(--lime);
+  outline-offset: 3px;
 }
 .lineage-frontier > span {
   color: var(--lime);
@@ -1028,11 +1040,11 @@ a:focus-visible { outline: 3px solid var(--lime); outline-offset: 3px; }
   font-size: 0.9375rem;
   line-height: 1.6;
 }
-.lineage-frontier a {
+.lineage-frontier strong {
   color: var(--lime);
   font-weight: 760;
 }
-.lineage-frontier a:hover {
+.lineage-frontier:hover strong {
   text-decoration: underline;
 }
 .lineage-locality {
