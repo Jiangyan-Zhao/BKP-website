@@ -346,6 +346,35 @@ function PosteriorChart() {
           <circle cx={queryX} cy={queryY} r="8" className="query-point" />
 
           <line x1={chart.left} x2={chart.left + chart.width} y1={chart.weightTop + chart.weightHeight} y2={chart.weightTop + chart.weightHeight} className="weight-baseline" />
+          <line
+            x1={chart.left}
+            x2={chart.left}
+            y1={chart.weightTop}
+            y2={chart.weightTop + chart.weightHeight}
+            className="weight-baseline"
+          />
+          {[1, 0].map((tick) => {
+            const y = chart.weightTop + (1 - tick) * chart.weightHeight;
+            return (
+              <g key={`kernel-weight-${tick}`}>
+                <line
+                  x1={chart.left - 4}
+                  x2={chart.left}
+                  y1={y}
+                  y2={y}
+                  className="weight-baseline"
+                />
+                <text
+                  x={chart.left - 8}
+                  y={y + 4}
+                  textAnchor="end"
+                  className="axis-label"
+                >
+                  {tick.toFixed(2)}
+                </text>
+              </g>
+            );
+          })}
           <g transform="translate(19 180) rotate(-90)" aria-hidden="true">
             <foreignObject className="chart-axis-math" x="-48" y="-17" width="96" height="34">
               <div><MathFormula>{"\\pi_2(x)"}</MathFormula></div>
