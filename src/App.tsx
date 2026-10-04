@@ -779,10 +779,10 @@ ${quickStartBody}`;
   );
 }
 
-const bkpBibtex = `@Misc{Zhao2025BKP,
+const bkpBibtex = `@Misc{Zhao2026BKP,
   title  = {BKP: An R Package for Beta Kernel Process Modeling},
   author = {Jiangyan Zhao and Kunhai Qing and Jin Xu},
-  year   = {2025},
+  year   = {2026},
   note   = {Accepted in Journal of Statistical Software; arXiv:2508.10447},
   url    = {https://arxiv.org/abs/2508.10447},
   doi    = {10.48550/arXiv.2508.10447}
