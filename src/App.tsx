@@ -783,7 +783,7 @@ const bkpBibtex = `@Misc{Zhao2025BKP,
   title  = {BKP: An R Package for Beta Kernel Process Modeling},
   author = {Jiangyan Zhao and Kunhai Qing and Jin Xu},
   year   = {2025},
-  note   = {arXiv:2508.10447},
+  note   = {Accepted in Journal of Statistical Software; arXiv:2508.10447},
   url    = {https://arxiv.org/abs/2508.10447},
   doi    = {10.48550/arXiv.2508.10447}
 }
@@ -1087,18 +1087,18 @@ export default function Home() {
               </li>
               <li className="lineage-step current">
                 <a href="https://arxiv.org/abs/2508.10447" target="_blank" rel="noreferrer">
-                  <span className="lineage-label">2025–2026 · Unified software</span>
+                  <span className="lineage-label">2025–2026 · Unified framework</span>
                   <h3>BKP and DKP</h3>
-                  <p>Consolidate, formalize, extend, and implement the method family for binomial and multinomial data, with priors, loss-based tuning, ESS calibration, and posterior tools.</p>
-                  <small>BKP software paper ↗</small>
+                  <p>Consolidate, formalize, and extend probability-scale kernel-conjugate modeling for binomial and multinomial data, with priors, loss-based tuning, ESS calibration, and posterior tools.</p>
+                  <small>Accepted in Journal of Statistical Software · preprint ↗</small>
                 </a>
               </li>
               <li className="lineage-step scalable">
-                <a href="https://github.com/Jiangyan-Zhao/BKP" target="_blank" rel="noreferrer">
+                <a href="https://arxiv.org/abs/2508.10447" target="_blank" rel="noreferrer">
                   <span className="lineage-label">2026 · Scalable extension</span>
                   <h3>TwinBKP and TwinDKP</h3>
-                  <p>Combine a representative global subset selected by twinning with prediction-specific nearest neighbors while retaining the conjugate pseudo-count update.</p>
-                  <small>Package implementation ↗</small>
+                  <p>Introduce scalable global–local approximations that combine a twinning-selected representative subset with prediction-specific nearest neighbors while preserving conjugate pseudo-count updating.</p>
+                  <small>Accepted in Journal of Statistical Software · preprint ↗</small>
                 </a>
               </li>
             </ol>
@@ -1210,12 +1210,12 @@ export default function Home() {
         </header>
         <aside className="resource-stack" aria-label="Project resources">
           <article className="paper-card">
-            <span className="resource-type">Software paper</span>
+            <span className="resource-type">Accepted · Journal of Statistical Software</span>
             <h3>BKP: An R Package for Beta Kernel Process Modeling</h3>
             <p>Jiangyan Zhao, Kunhai Qing, and Jin Xu</p>
             <div className="paper-card-links">
-              <a href="https://arxiv.org/abs/2508.10447" target="_blank" rel="noreferrer"><b>Read on arXiv</b><i>↗</i></a>
-              <a href="https://github.com/Jiangyan-Zhao/BKP-paper/blob/master/paper/TR_BKP.pdf" target="_blank" rel="noreferrer"><b>Latest manuscript PDF</b><i>↗</i></a>
+              <a href="https://arxiv.org/abs/2508.10447" target="_blank" rel="noreferrer"><b>arXiv preprint</b><i>↗</i></a>
+              <a href="https://github.com/Jiangyan-Zhao/BKP-paper/blob/master/paper/TR_BKP.pdf" target="_blank" rel="noreferrer"><b>Manuscript PDF</b><i>↗</i></a>
             </div>
           </article>
           <a className="resource-card blue" href="https://github.com/Jiangyan-Zhao/BKP" target="_blank" rel="noreferrer">

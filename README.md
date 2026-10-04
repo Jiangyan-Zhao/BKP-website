@@ -10,6 +10,8 @@ The website provides an accessible introduction to the Beta Kernel Process (BKP)
 
 **Live website:** <https://jiangyan-zhao.github.io/BKP-website/>
 
+**Paper status:** *BKP: An R Package for Beta Kernel Process Modeling*, by Jiangyan Zhao, Kunhai Qing, and Jin Xu, has been accepted in *Journal of Statistical Software*. The [arXiv preprint](https://arxiv.org/abs/2508.10447) remains available. Both the unified BKP/DKP framework and the scalable TwinBKP/TwinDKP extensions are contributions described in this paper.
+
 ## Overview
 
 The Beta Kernel Process directly models an input-dependent probability function using kernel-weighted observations and conjugate Beta updates. For binary or binomial data, the posterior distribution at an input location $\boldsymbol{x}$ is
@@ -41,7 +43,7 @@ The framework is extended in two directions:
 
 ## Methodological lineage
 
-For the broader methodological context—from early smoothed Beta distributions in robotics through Continuous Correlated Beta Processes, beta-kernel classification, and the Smooth Beta Process to unified BKP/DKP software and scalable Twin variants—see the [visual methodological lineage on the live website](https://jiangyan-zhao.github.io/BKP-website/?section=method).
+For the broader methodological context—from early smoothed Beta distributions in robotics through Continuous Correlated Beta Processes, beta-kernel classification, and the Smooth Beta Process to the unified BKP/DKP framework and scalable Twin variants—see the [visual methodological lineage on the live website](https://jiangyan-zhao.github.io/BKP-website/?section=method).
 
 ## Website contents
 
@@ -93,7 +95,7 @@ Direct links are provided to the R package, CRAN release, software paper, source
 | [BKP on CRAN](https://cran.r-project.org/web/packages/BKP/index.html) | Stable release of the R package |
 | [BKP package repository](https://github.com/Jiangyan-Zhao/BKP) | Package source code, documentation, tests, and development version |
 | [BKP paper repository](https://github.com/Jiangyan-Zhao/BKP-paper) | Paper source, replication scripts, data instructions, figures, and slides |
-| [Software paper on arXiv](https://arxiv.org/abs/2508.10447) | Methodological and software description |
+| [Paper preprint on arXiv](https://arxiv.org/abs/2508.10447) | Accepted in Journal of Statistical Software; methodological and software description |
 
 ## Installing the BKP package
 
@@ -232,7 +234,7 @@ When referring to the BKP methodology or software paper, please cite:
   title  = {BKP: An R Package for Beta Kernel Process Modeling},
   author = {Jiangyan Zhao and Kunhai Qing and Jin Xu},
   year   = {2025},
-  note   = {arXiv:2508.10447},
+  note   = {Accepted in Journal of Statistical Software; arXiv:2508.10447},
   url    = {https://arxiv.org/abs/2508.10447},
   doi    = {10.48550/arXiv.2508.10447}
 }
